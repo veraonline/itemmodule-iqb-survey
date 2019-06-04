@@ -1,0 +1,113 @@
+body
+{
+	background-color: #EEEEEE;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+}
+
+p 
+{
+	line-height: 150%;
+}
+
+#contentDiv
+{
+    background-color: white;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 12px 12px 12px 12px;
+}
+
+.iqb_dynform_instructions_questionmark
+{
+    height: 24px;
+    width: 24px;
+}
+
+#dynform
+{
+	width: 100%;
+}
+
+#dynform tr td
+{
+	padding-top: 3px;
+	padding-bottom: 3px;
+	vertical-align: middle;
+}
+
+.iqb_noselect
+{
+     /* 
+      Prevents text from being selected by user;
+	  CSS source: http://stackoverflow.com/a/4407335
+	  License: CC BY-SA 3.0
+	  By: http://stackoverflow.com/users/370286/blowsie , http://stackoverflow.com/users/94204/joel-fillmore, http://stackoverflow.com/users/439427/rubens-mariuzzo , http://stackoverflow.com/users/165673/yarin , 
+	      http://stackoverflow.com/users/63550/peter-mortensen , http://stackoverflow.com/users/-1/community , http://stackoverflow.com/users/698179/rudi-visser , http://stackoverflow.com/users/106224/boltclock ,
+		  http://stackoverflow.com/users/1317805/james-donnelly , http://stackoverflow.com/users/1238019/zessx , http://stackoverflow.com/users/2998777/nikhil-meher , http://stackoverflow.com/users/3853934/gothdo ,
+		  http://stackoverflow.com/users/3448527/dippas , http://stackoverflow.com/users/2571493/nhan , http://stackoverflow.com/users/157247/t-j-crowder , http://stackoverflow.com/users/608068/nemostein ,
+		  http://stackoverflow.com/users/6028635/maarten-wolfsen
+   */  
+   
+	-webkit-touch-callout: none; 
+	-webkit-user-select: none; 
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none; 
+}
+
+.iqb_dynform_instructions_questionmark
+{
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+}
+
+/* the order of the following classes is critical for the functionality of the dynform, in order to properly process the visibility priority */
+
+.iqb_dynform_if_tr_visible
+{
+	display: table-row;
+}
+
+.iqb_dynform_repeat_tr_visible
+{
+	display: table-row;
+}
+
+.iqb_dynform_repeat_tr_invisible
+{
+	display: none;
+}
+
+.iqb_dynform_if_tr_invisible
+{
+	display: none;
+}
+
+/* end of critical order section of CSS */
+
+.dynform_status_div
+{
+	padding-left: 6px;
+	padding-right: 6px;
+	font-weight: bold;
+}
+
+#dynform_loading
+{
+	font-size: 24px;
+}
+
+.btnBackImage
+{
+	position: relative;
+	left: 7px;
+}
+
+.btnForwardImage {
+	position: relative; 
+	left: 2px;
+}
