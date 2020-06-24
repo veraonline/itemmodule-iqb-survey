@@ -1,6 +1,12 @@
 # Intro
 
-This repository contains v0.3.0 of the IQB Survey Authoring Tool and of the IQB Survey Player.
+A programmable item-player for surveys. 
+
+Contains: 
+* Player-Plugin 
+* Editor-Plugin 
+
+Version 0.3.0
 
 # Copyright
 
