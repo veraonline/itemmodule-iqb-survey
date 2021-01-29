@@ -16,5 +16,5 @@ The responses this player emits are specified [here](https://github.com/iqb-berl
 [IQB-Testcenter](https://github.com/iqb-berlin/testcenter-setup) or the
 [Verona-Player-Testbed](https://github.com/iqb-berlin/verona-player-testbed).
 * This angular application builds to one single html file. See the
-[release section](https://github.com/iqb-berlin/verona-player-eva/releases) of
+[release section](https://github.com/iqb-berlin/verona-player-abi/releases) of
 this repository to get a ready-to-use player.  
