@@ -1,26 +1,70 @@
 {
-  "name": "iqbsurveyplayer",
-  "version": "0.3.0",
-  "description": "IQB Survey Player",
-  "main": "",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "custom_build.bat"
+  "name": "verona-player-eva",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iqb-berlin/verona-player-eva"
   },
-  "author": "",
-  "license": "All rights reserved",
+  "scripts": {
+    "ng": "ng",
+    "prestart": "node src/scripts/updateIndexHtmlMeta",
+    "start": "ng serve",
+    "prebuild": "node src/scripts/updateIndexHtmlMeta",
+    "build": "ng build --prod --output-hashing=none",
+    "postbuild": "node node_modules/iqb-dev-components/src/distpacker.js dist/$npm_package_name",
+    "buildplayer": "ng build player-component --prod --output-hashing=none",
+    "postbuildplayer": "node node_modules/iqb-dev-components/src/js_css_packer.js dist player-component",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
   "dependencies": {
-    "core-js": "^3.0.1"
+    "@angular/animations": "^11.0.5",
+    "@angular/cdk": "^11.0.3",
+    "@angular/common": "^11.0.5",
+    "@angular/compiler": "^11.0.5",
+    "@angular/core": "^11.0.5",
+    "@angular/elements": "^11.0.5",
+    "@angular/flex-layout": "^11.0.0-beta.33",
+    "@angular/forms": "^11.0.5",
+    "@angular/material": "^11.0.3",
+    "@angular/platform-browser": "^11.0.5",
+    "@angular/platform-browser-dynamic": "^11.0.5",
+    "@angular/router": "^11.0.5",
+    "core-js": "^2.6.12",
+    "rxjs": "~6.6.3",
+    "tslib": "^2.0.0",
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@types/jquery": "^3.3.22",
-    "@types/jqueryui": "^1.12.6",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.6",
-    "webpack": "^4.26.0",
-    "webpack-cli": "^3.1.2"
+    "@angular-devkit/build-angular": "^0.1100.5",
+    "@angular/cli": "^11.0.5",
+    "@angular/compiler-cli": "^11.0.5",
+    "@angular/language-service": "^11.0.5",
+    "@iqb/eslint-config": "0.0.7",
+    "@types/jasmine": "^3.6.2",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.19.11",
+    "iqb-dev-components": "^1.3.7",
+    "jasmine-core": "~3.6.0",
+    "jasmine-spec-reporter": "~5.0.0",
+    "karma": "~5.1.1",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage-istanbul-reporter": "~3.0.2",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "protractor": "~7.0.0",
+    "ts-node": "~7.0.0",
+    "typescript": "~4.0.5"
+  },
+  "eslintConfig": {
+    "extends": "@iqb/eslint-config",
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json"
+      ]
+    }
   }
 }
