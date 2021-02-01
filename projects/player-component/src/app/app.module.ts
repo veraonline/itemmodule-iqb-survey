@@ -53,7 +53,9 @@ export class AppModule {
   constructor(private injector: Injector) {}
   ngDoBootstrap(): void {
     const playerElement = createCustomElement(PlayerComponent, { injector: this.injector });
-    console.log('defining player-component');
-    customElements.define('player-component', playerElement);
+    // TODO Rausfinden warum das 2x gecallt wird und dann if entfernen
+    if (!customElements.get('player-component')) {
+      customElements.define('player-component', playerElement);
+    }
   }
 }
