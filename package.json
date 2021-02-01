@@ -11,7 +11,7 @@
     "prestart": "node src/scripts/updateIndexHtmlMeta",
     "start": "ng serve",
     "prebuild": "node src/scripts/updateIndexHtmlMeta",
-    "build": "ng build --prod --output-hashing=none",
+    "build": "ng build --prod --output-hashing=none --optimization=false",
     "postbuild": "node node_modules/iqb-dev-components/src/distpacker.js dist/$npm_package_name",
     "buildplayer": "ng build player-component --prod --output-hashing=none",
     "postbuildplayer": "node node_modules/iqb-dev-components/src/js_css_packer.js dist player-component",
