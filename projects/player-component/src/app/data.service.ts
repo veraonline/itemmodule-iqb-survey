@@ -30,6 +30,7 @@ export class DataService {
   }
 
   setElements(scriptLines: string[], oldResponses: Record<string, string>): void {
+    this.rootBlock = new UIBlock('0');
     const errorMessage = DataService.checkScriptHeader(scriptLines[0]);
     if (errorMessage !== '') {
       this.rootBlock.elements.push(DataService.createErrorElement(errorMessage));
