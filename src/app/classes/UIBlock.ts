@@ -12,11 +12,11 @@ export class UIBlock implements UIElementOrBlock {
   }
 
   getCopy(idSuffix = ''): UIBlock {
-    const myReturn = new UIBlock(this.id);
+    const copy = new UIBlock(this.id);
     this.elements.forEach(e => {
-      myReturn.elements.push(e.getCopy(idSuffix));
+      copy.elements.push(e.getCopy(idSuffix));
     });
-    return myReturn;
+    return copy;
   }
 
   check(values: Record<string, string>): void {
@@ -43,16 +43,16 @@ export class RepeatBlock extends UIBlock {
   }
 
   getCopy(idSuffix = ''): RepeatBlock {
-    const myReturn = new RepeatBlock(this.id + idSuffix, '', '', '', this.helpText);
+    const copy = new RepeatBlock(this.id + idSuffix, '', '', '', this.helpText);
     this.properties.forEach((value, key) => {
-      myReturn.properties.set(key, value);
+      copy.properties.set(key, value);
     });
-    myReturn.helpText = this.helpText;
+    copy.helpText = this.helpText;
     this.templateElements.forEach(e => {
-      myReturn.templateElements.push(e.getCopy());
+      copy.templateElements.push(e.getCopy());
     });
-    myReturn.value = this.value;
-    return myReturn;
+    copy.value = this.value;
+    return copy;
   }
 
   setSubBlockNumber(n: number, oldResponses = {}): void {
@@ -93,17 +93,17 @@ export class IfThenElseBlock extends UIBlock {
   }
 
   getCopy(idSuffix = ''): IfThenElseBlock {
-    const myReturn = new IfThenElseBlock(this.id + idSuffix,
+    const copy = new IfThenElseBlock(this.id + idSuffix,
       this.conditionVariableName + idSuffix,
       this.conditionTrueValue);
     this.trueElements.forEach(e => {
-      myReturn.trueElements.push(e.getCopy(idSuffix));
+      copy.trueElements.push(e.getCopy(idSuffix));
     });
     this.falseElements.forEach(e => {
-      myReturn.falseElements.push(e.getCopy(idSuffix));
+      copy.falseElements.push(e.getCopy(idSuffix));
     });
-    myReturn.value = this.value;
-    return myReturn;
+    copy.value = this.value;
+    return copy;
   }
 
   check(values: Record<string, string>): void {

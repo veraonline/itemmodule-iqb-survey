@@ -22,15 +22,15 @@ export class UIElement implements UIElementOrBlock {
   }
 
   getCopy(idSuffix = ''): UIElement {
-    const myReturn = new UIElement(this.id + idSuffix, this.fieldType, this.helpText);
+    const copy = new UIElement(this.id + idSuffix, this.fieldType, this.helpText);
     this.properties.forEach((value, key) => {
-      myReturn.properties.set(key, value);
+      copy.properties.set(key, value);
     });
-    myReturn.helpText = this.helpText;
+    copy.helpText = this.helpText;
     if (idSuffix.length === 0) {
-      myReturn.value = this.value;
+      copy.value = this.value;
     }
-    return myReturn;
+    return copy;
   }
 }
 
