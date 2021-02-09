@@ -8,11 +8,12 @@ import { UIElement } from '../../classes/UIElement';
   selector: 'player-text',
   template: `
     <ng-container *ngIf="content" [ngSwitch]="elementDataAsUIElement.fieldType">
-      <p *ngSwitchCase="fieldType.TEXT">{{content}}</p>
+      <p *ngSwitchCase="fieldType.TEXT" matTooltip={{helpText}} [matTooltipPosition]="'above'">{{content}}</p>
       <p *ngSwitchCase="fieldType.SCRIPT_ERROR" class="script-error">{{content}}</p>
-      <h1 *ngSwitchCase="fieldType.TITLE">{{content}}</h1>
-      <h2 *ngSwitchCase="fieldType.HEADER">{{content}}</h2>
-      <div *ngSwitchCase="fieldType.HTML" [innerHTML]="content"></div>
+      <h1 *ngSwitchCase="fieldType.TITLE" matTooltip={{helpText}} [matTooltipPosition]="'above'">{{content}}</h1>
+      <h2 *ngSwitchCase="fieldType.HEADER" matTooltip={{helpText}} [matTooltipPosition]="'above'">{{content}}</h2>
+      <div *ngSwitchCase="fieldType.HTML" [innerHTML]="content"
+           matTooltip={{helpText}} [matTooltipPosition]="'above'"></div>
     </ng-container>
 
     <ng-container *ngIf="!content" [ngSwitch]="elementDataAsUIElement.fieldType">
@@ -26,21 +27,21 @@ import { UIElement } from '../../classes/UIElement';
 })
 export class TextComponent extends ElementComponent implements OnInit {
   content: string | SafeHtml;
+  helpText = '';
 
   constructor(private sanitizer: DomSanitizer) {
     super();
   }
 
   ngOnInit(): void {
-    if (this.elementData && this.elementData instanceof UIElement) {
-      if (this.elementData.fieldType === FieldType.HTML) {
-        this.content = this.sanitizer.bypassSecurityTrustHtml(
-          this.elementData.properties.get(PropertyKey.TEXT)
-        );
-        // todo how to keep urls?
-      } else {
-        this.content = this.elementData.properties.get(PropertyKey.TEXT);
-      }
+    const elementData = this.elementData as UIElement;
+    this.helpText = elementData.helpText;
+    if (elementData.fieldType === FieldType.HTML) {
+      this.content = this.sanitizer.bypassSecurityTrustHtml(
+        elementData.properties.get(PropertyKey.TEXT)
+      );
+    } else {
+      this.content = elementData.properties.get(PropertyKey.TEXT);
     }
   }
 }

@@ -13,7 +13,11 @@ import { InputElement } from '../../classes/UIElement';
         <p>{{preText}}</p>
       </div>
       <div fxFlex="50">
-        <mat-checkbox class="chb" [formControl]="checkboxControl">{{postText}}</mat-checkbox>
+        <mat-checkbox class="chb" [formControl]="checkboxControl"
+                      matTooltip={{helpText}}
+                      [matTooltipPosition]="'above'">
+          {{postText}}
+        </mat-checkbox>
         <mat-error *ngIf="checkboxControl.errors && checkboxControl.touched">
           {{checkboxControl.errors | errorTransform: true}}
         </mat-error>
@@ -26,29 +30,29 @@ import { InputElement } from '../../classes/UIElement';
 export class CheckboxComponent extends ElementComponent implements OnInit, OnDestroy {
   preText = '';
   postText = '';
+  helpText = '';
   checkboxControl = new FormControl();
   valueChangeSubscription: Subscription = null;
 
   ngOnInit(): void {
-    // if (this.elementData instanceof UIElement) {
-    if (this.elementData instanceof InputElement) {
-      this.preText = this.elementData.properties.get(PropertyKey.TEXT);
-      this.postText = this.elementData.properties.get(PropertyKey.TEXT2);
-      if (this.elementData.required) {
-        this.checkboxControl.setValidators(Validators.requiredTrue);
-      }
-      if (this.value === 'true') {
-        this.checkboxControl.setValue(true);
-      }
-      this.parentForm.addControl(this.elementData.id, this.checkboxControl);
-      this.valueChangeSubscription = this.checkboxControl.valueChanges.subscribe(() => {
-        if (this.checkboxControl.valid && this.checkboxControl.value === true) {
-          this.value = 'true';
-        } else {
-          this.value = '';
-        }
-      });
+    const elementData = this.elementData as InputElement;
+    this.preText = elementData.properties.get(PropertyKey.TEXT);
+    this.postText = elementData.properties.get(PropertyKey.TEXT2);
+    this.helpText = elementData.helpText;
+    if (elementData.required) {
+      this.checkboxControl.setValidators(Validators.requiredTrue);
     }
+    if (this.value === 'true') {
+      this.checkboxControl.setValue(true);
+    }
+    this.parentForm.addControl(elementData.id, this.checkboxControl);
+    this.valueChangeSubscription = this.checkboxControl.valueChanges.subscribe(() => {
+      if (this.checkboxControl.valid && this.checkboxControl.value === true) {
+        this.value = 'true';
+      } else {
+        this.value = '';
+      }
+    });
   }
 
   ngOnDestroy(): void {
