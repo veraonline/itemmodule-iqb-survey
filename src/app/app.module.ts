@@ -1,42 +1,61 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatInputModule } from '@angular/material/input';
-import { AppComponent } from './app.component';
-import { SourceInputDialogComponent } from './source-input-dialog/source-input-dialog.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import './player-component/player-component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+
+import { SubFormComponent } from './components/sub-form/sub-form.component';
+import { RepeatComponent } from './components/repeat/repeat.component';
+import { InputErrorPipe } from './components/input-error.pipe';
+import { SelectComponent } from './components/select/select.component';
+import { CheckboxComponent } from './components/checkbox/checkbox.component';
+import { InputComponent } from './components/input/input.component';
+import { TextComponent } from './components/text/text.component';
+
+import { PlayerComponent } from './player.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SourceInputDialogComponent
+    TextComponent,
+    InputComponent,
+    CheckboxComponent,
+    SelectComponent,
+    InputErrorPipe,
+    RepeatComponent,
+    SubFormComponent,
+    PlayerComponent
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
     NoopAnimationsModule,
-    MatDialogModule,
-    MatCardModule,
-    MatFormFieldModule,
     MatButtonModule,
-    MatSelectModule,
-    MatCheckboxModule,
     MatInputModule,
+    FlexLayoutModule,
     MatTooltipModule,
-    FlexLayoutModule
+    FormsModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatExpansionModule
   ],
   entryComponents: [
-    SourceInputDialogComponent
-  ],
-  bootstrap: [AppComponent]
+    PlayerComponent
+  ]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private injector: Injector) {}
+  ngDoBootstrap(): void {
+    const playerElement = createCustomElement(PlayerComponent, { injector: this.injector });
+    customElements.define('player-component', playerElement);
+  }
+}

@@ -20,7 +20,7 @@ import { DataService } from './data.service';
 })
 export class PlayerComponent {
   @Output() valueChanged = new EventEmitter<string>();
-  // @Output() ready = new EventEmitter();
+  // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
   form = new FormGroup({});
 
