@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IfThenElseBlock, RepeatBlock, UIBlock } from './classes/UIBlock';
 import { FieldType } from './classes/interfaces';
 import {
-  CheckboxElement, ErrorElement,
+  CheckboxElement, DropDownElement, ErrorElement,
   MultiChoiceElement,
   NumberInputElement,
   TextElement,
@@ -168,6 +168,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
         return DataService.createCheckboxElement(line, id);
       case 'multiple-choice':
         return DataService.createMultiChoiceElement(line, id);
+      case 'drop-down':
+        return DataService.createDropDownElement(line, id);
       default:
         return DataService.createErrorElement(`Scriptfehler - Schlüsselwort nicht erkannt: "${line}"`);
     }
@@ -241,6 +243,19 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     const textBefore = this.getParameter(line, 3);
     const textAfter = this.getParameter(line, 4);
     return new MultiChoiceElement(id, variableParam, required, textBefore, textAfter, this.getHelpText(line));
+  }
+
+  private static createDropDownElement(line: string, id: string) {
+    const variableParam = this.getParameter(line, 1);
+    if (!variableParam) {
+      return DataService.createErrorElement(
+        `Scriptfehler - Parameter fehlt: "${line}"`
+      );
+    }
+    const required = (this.getParameter(line, 2) && this.getParameter(line, 2) === '1');
+    const textBefore = this.getParameter(line, 3);
+    const textAfter = this.getParameter(line, 4);
+    return new DropDownElement(id, variableParam, required, textBefore, textAfter, this.getHelpText(line));
   }
 
   private static createErrorElement(errorText: string): UIElement {

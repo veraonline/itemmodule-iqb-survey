@@ -95,6 +95,15 @@ export class MultiChoiceElement extends InputElement {
   }
 }
 
+export class DropDownElement extends InputElement {
+  constructor(id: string, variableParam: string, required: boolean, textBefore: string, textAfter: string,
+              helpText: string) {
+    super(variableParam, FieldType.DROP_DOWN, required, helpText);
+    if (textBefore) this.properties.set(PropertyKey.TEXT, textBefore);
+    if (textAfter) this.properties.set(PropertyKey.TEXT2, textAfter);
+  }
+}
+
 export class ErrorElement extends UIElement {
   constructor(id: string, errorText: string) {
     super(id, FieldType.SCRIPT_ERROR);
