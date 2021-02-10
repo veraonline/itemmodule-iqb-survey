@@ -30,11 +30,9 @@ export class PlayerComponent {
   set startData(startData: StartData) {
     if (startData.unitDefinition) {
       let storedResponses = {};
-      if (startData.unitState && startData.unitState.dataParts) {
-        const storedResponsesRaw = startData.unitState.dataParts;
-        if (storedResponsesRaw && storedResponsesRaw.allResponses) {
-          storedResponses = JSON.parse(storedResponsesRaw.allResponses);
-        }
+      if (startData.unitState?.dataParts?.allResponses &&
+          Object.keys(startData.unitState?.dataParts?.allResponses).length > 0) {
+        storedResponses = JSON.parse(startData.unitState.dataParts.allResponses);
       }
       this.dataService.setElements(startData.unitDefinition.split('\n'), storedResponses);
     } else {
