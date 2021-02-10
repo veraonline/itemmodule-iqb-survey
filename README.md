@@ -15,6 +15,26 @@ The responses this player emits are specified [here](https://github.com/iqb-berl
 * You need a Verona host system to run this software, for example the
 [IQB-Testcenter](https://github.com/iqb-berlin/testcenter-setup) or the
 [Verona-Player-Testbed](https://github.com/iqb-berlin/verona-player-testbed).
-* This angular application builds to one single html file. See the
-[release section](https://github.com/iqb-berlin/verona-player-abi/releases) of
-this repository to get a ready-to-use player.  
+* This angular application builds to one single html file, usually called `index_packed.html`.
+You can find a ready-to-use player in [release section](https://github.com/iqb-berlin/verona-player-abi/releases) of
+this repository.
+
+## Development
+
+To install the necessary packages run:
+
+```
+npm install
+```
+
+Building the player:
+```
+npm run build
+```
+
+This produces an HTML file in the *dist* directory, called `index_packed.html`.
+
+To create a version you can run locally without a host system you may want
+to use the file `wrapper/index_test.html`. Which comes with a prepopulated
+unit script and controls for loading other scripts. To use it, simply rename
+the file to `index.html` (you may want to backup the original) and run the *build* command.
