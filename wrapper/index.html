@@ -18,192 +18,81 @@
 <body>
   <script type="text/javascript" src="verona-player-abi.js"></script>
   <script>
-    const isProductionMode = false;
     let sessionId;
     let playerMetadata = document.querySelectorAll("meta")[1].attributes;
-    let tempResponses = '{}'; // TODO refactor to actual object
-    let storedResponses = '{}';
-    let myScript = `iqb-scripted::1.0
-title::Testscript Title??Hilfetext1
-header::Abschnitt 1 Basic Elements??Hilfetext1
-header
-text::Standard Text Element??Hilfetext1
-html::HTML Ele with <strong>strong</strong> text and hyperlink: <a href=”https://www.iqb.hu-berlin.de”>IQB website</a>??Hilfetext1
-hr
-rem::Kommentar. Soll nicht erscheinen!
-header::Abschnitt 2 Eingabeelemente
-input-text::text_var1::1::Text eingeben::Text nach Feld::0::10??Hilfetext1
-input-number::num_var1::1::Nummer eingeben::Text nach Feld::0::10??Hilfetext1
-header::Abschnitt 3 Auswahlelemente
-checkbox::check_var1::0::Bitte ankreuzen??Hilfetext1
-if-start::check_var1::true
-  text::Checked
-if-end
-multiple-choice::mc_var1::1::Multiple Choice Feld: ::Choice1##Choice2##Choice3??Hilfetext1
-if-start::mc_var1::1
-  text::Choice 1 chosen
-  if-start::check_var1::true
-    text::and Checked
-  if-end
-if-else
-  text::NOT Choice1
-if-end
-repeat-start::examineecount::Wie viele Prüflinge gibt es?::Angaben zu Prüfling::20
-  text::Repeat Inhalt
-  if-start::check_var1::true
-    text::Checked
-  if-end
-repeat-end
-repeat-start::examineecount::Wie viele Prüflinge gibt es?::Angaben zu Prüfling::20
-  text::Repeat Inhalt
-  repeat-start::examineecount::Wie viele Prüflinge gibt es2?::Angaben zu Prüfling::20
-    text::Repeat Inhalt2
-  repeat-end
-repeat-end`;
+    let tempResponses = {};
     let playerStartData = {
-      unitDefinition: myScript,
+      unitDefinition: '',
       unitState: {
         dataParts: { allResponses: {} }
       }
     };
 
     function elementValueChanged(event) {
-      if (isProductionMode) {
-        window.parent.postMessage({
-          type: 'vopStateChangedNotification',
-          sessionId: sessionId,
-          timeStamp: Date.now(),
-          unitState: {
-            dataParts: {
-              allResponses: event.detail
-            },
-            unitStateType: playerMetadata.getNamedItem('supported-unit-state-data-types').value,
-          }
-        }, '*');
-      } else {
-        tempResponses = event.detail;
-        console.log('player sends data', event.detail);
-      }
-    }
-
-    if (isProductionMode) {
-      window.addEventListener('message', (event) => {
-        if ('data' in event && 'type' in event.data) {
-          switch (event.data.type) {
-            case 'vopStartCommand':
-              if (event.data.sessionId) {
-                sessionId = event.data.sessionId;
-                playerStartData = event.data;
-              } else {
-                console.error('player: (vopStartCommand) no sessionId is given');
-              }
-              break;
-            case 'vopPageNavigationCommand':
-            case 'vopGetStateRequest':
-            case 'vopStopCommand':
-            case 'vopContinueCommand':
-              console.warn(`player: message of type ${event.data.type} not processed yet`);
-              break;
-            default:
-              console.warn(`player: got message of unknown type ${event.data.type}`);
-          }
-        }
-      });
-      window.addEventListener('blur', () => {
-        window.parent.postMessage({
-          type: 'vopWindowFocusChangedNotification',
-          sessionId: sessionId,
-          hasFocus: document.hasFocus()
-        }, '*');
-      });
-      window.addEventListener('focus', () => {
-        window.parent.postMessage({
-          type: 'vopWindowFocusChangedNotification',
-          sessionId: sessionId,
-          hasFocus: document.hasFocus()
-        }, '*');
-      });
       window.parent.postMessage({
-        type: 'vopReadyNotification',
-        apiVersion: playerMetadata.getNamedItem('data-api-version').value,
-        notSupportedApiFeatures: playerMetadata.getNamedItem('not-supported-api-features').value,
-        supportedUnitDefinitionTypes: playerMetadata.getNamedItem('supported-unit-definition-types').value,
-        supportedUnitStateDataTypes: playerMetadata.getNamedItem('supported-unit-state-data-types').value,
-      }, '*');
-    } else {
-      playerStartData = {
-        unitDefinition: myScript,
+        type: 'vopStateChangedNotification',
+        sessionId: sessionId,
+        timeStamp: Date.now(),
         unitState: {
-          dataParts: { allResponses: storedResponses }
+          dataParts: {
+            allResponses: event.detail
+          },
+          unitStateType: playerMetadata.getNamedItem('data-supported-unit-state-data-types').value,
         }
-      };
+      }, '*');
+
     }
 
     const playerComponent = document.createElement('player-component',{ is : 'player-component' });
     playerComponent.addEventListener('valueChanged', (event) => {
       elementValueChanged(event);
     });
-    document.body.appendChild(playerComponent);
-    playerComponent.startData = playerStartData;
-    console.log('playerComponent1', playerComponent);
+    document.body.appendChild(playerComponent)
 
-    if (!isProductionMode) {
-      const buttonGroupDiv = document.createElement('div');
-      const loadScriptButton = document.createElement('button');
-      loadScriptButton.textContent = 'Skript laden';
-      loadScriptButton.title = 'Script eingeben';
-      loadScriptButton.onclick = function() {
-        const loadScriptButtonGroupDiv = document.createElement('div');
-
-        const scriptInputTextArea = document.createElement('textarea');
-        scriptInputTextArea.setAttribute('rows', '14');
-        scriptInputTextArea.setAttribute('cols', '99');
-
-        const confirmLoadButton = document.createElement('button');
-        confirmLoadButton.textContent = 'Okay';
-        confirmLoadButton.onclick = function() {
-          if (scriptInputTextArea.value) {
-            playerStartData = {
-              unitDefinition: scriptInputTextArea.value,
-              unitState: {
-                dataParts: { allResponses: '{}' }
-              }
-            };
-            playerComponent.startData = playerStartData;
-            closeLoadScriptDiv();
-          }
-        }
-
-        const cancelLoadButton = document.createElement('button');
-        cancelLoadButton.textContent = 'Abruch';
-        cancelLoadButton.onclick = function() {
-          closeLoadScriptDiv();
-        }
-
-        document.body.appendChild(scriptInputTextArea);
-        loadScriptButtonGroupDiv.appendChild(confirmLoadButton);
-        loadScriptButtonGroupDiv.appendChild(cancelLoadButton);
-        document.body.appendChild(loadScriptButtonGroupDiv);
-
-        function closeLoadScriptDiv() {
-          document.body.removeChild(scriptInputTextArea);
-          document.body.removeChild(loadScriptButtonGroupDiv);
+    window.addEventListener('message', (event) => {
+      if ('data' in event && 'type' in event.data) {
+        switch (event.data.type) {
+          case 'vopStartCommand':
+            if (event.data.sessionId) {
+              sessionId = event.data.sessionId;
+              playerStartData = event.data;
+              playerComponent.startData = playerStartData;
+            } else {
+              console.error('player: (vopStartCommand) no sessionId is given');
+            }
+            break;
+          case 'vopPageNavigationCommand':
+          case 'vopGetStateRequest':
+          case 'vopStopCommand':
+          case 'vopContinueCommand':
+            console.warn(`player: message of type ${event.data.type} not processed yet`);
+            break;
+          default:
+            console.warn(`player: got message of unknown type ${event.data.type}`);
         }
       }
-      buttonGroupDiv.appendChild(loadScriptButton);
-
-      const saveScriptButton = document.createElement('button');
-      saveScriptButton.textContent = 'Speichern';
-      saveScriptButton.title = 'Speichere die aktuellen Antworten';
-      buttonGroupDiv.appendChild(saveScriptButton);
-
-      const restoreResponsesButton = document.createElement('button');
-      restoreResponsesButton.textContent = 'Wiederherstellen';
-      restoreResponsesButton.title = 'Stelle alle gespeicherten Antworten wieder her';
-      buttonGroupDiv.appendChild(restoreResponsesButton);
-      document.body.appendChild(buttonGroupDiv);
-    }
-
+    });
+    window.addEventListener('blur', () => {
+      window.parent.postMessage({
+        type: 'vopWindowFocusChangedNotification',
+        sessionId: sessionId,
+        hasFocus: document.hasFocus()
+      }, '*');
+    });
+    window.addEventListener('focus', () => {
+      window.parent.postMessage({
+        type: 'vopWindowFocusChangedNotification',
+        sessionId: sessionId,
+        hasFocus: document.hasFocus()
+      }, '*');
+    });
+    window.parent.postMessage({
+      type: 'vopReadyNotification',
+      apiVersion: playerMetadata.getNamedItem('data-api-version').value,
+      notSupportedApiFeatures: playerMetadata.getNamedItem('data-not-supported-api-features').value,
+      supportedUnitDefinitionTypes: playerMetadata.getNamedItem('data-supported-unit-definition-types').value,
+      supportedUnitStateDataTypes: playerMetadata.getNamedItem('data-supported-unit-state-data-types').value,
+    }, '*');
   </script>
 </body>
 </html>
