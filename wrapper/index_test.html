@@ -16,12 +16,12 @@
   <link rel="stylesheet" href="verona-player-abi.css">
 </head>
 <body>
-  <script type="text/javascript" src="verona-player-abi.js"></script>
-  <script>
-    let sessionId;
-    let tempResponses = {};
-    let storedResponses = {};
-    let myScript = `iqb-scripted::1.0
+<script type="text/javascript" src="verona-player-abi.js"></script>
+<script>
+  let sessionId;
+  let tempResponses = {};
+  let storedResponses = {};
+  let myScript = `iqb-scripted::1.0
 title::Testscript Title??Hilfetext1
 header::Abschnitt 1 Basic Elements??Hilfetext1
 header
@@ -59,37 +59,39 @@ repeat-start::examineecount::Wie viele Prüflinge gibt es?::Angaben zu Prüfling
     text::Repeat Inhalt2
   repeat-end
 repeat-end`;
-    let playerStartData = {
-      unitDefinition: '',
-      unitState: {
-        dataParts: { allResponses: {} }
-      }
-    };
-
-    function elementValueChanged(event) {
-      tempResponses = event.detail;
+  let playerStartData = {
+    unitDefinition: '',
+    unitState: {
+      dataParts: { allResponses: {} }
     }
+  };
 
-    const playerComponent = document.createElement('player-component',{ is : 'player-component' });
-    playerComponent.addEventListener('valueChanged', (event) => {
-      elementValueChanged(event);
-    });
-    document.body.appendChild(playerComponent)
+  function elementValueChanged(event) {
+    tempResponses = event.detail;
+  }
 
-    playerStartData = {
-      unitDefinition: myScript,
-      unitState: {
-        dataParts: { allResponses: storedResponses }
-      }
-    };
-    playerComponent.startData = playerStartData;
+  const playerComponent = document.createElement('player-component',{ is : 'player-component' });
+  playerComponent.addEventListener('valueChanged', (event) => {
+    elementValueChanged(event);
+  });
+  document.body.appendChild(playerComponent)
 
-    const buttonGroupDiv = document.createElement('div');
-    const loadScriptButton = document.createElement('button');
-    loadScriptButton.textContent = 'Skript laden';
-    loadScriptButton.title = 'Script eingeben';
-    loadScriptButton.onclick = function() {
+  playerStartData = {
+    unitDefinition: myScript,
+    unitState: {
+      dataParts: { allResponses: storedResponses }
+    }
+  };
+  playerComponent.startData = playerStartData;
+
+  const buttonGroupDiv = document.createElement('div');
+  const loadScriptButton = document.createElement('button');
+  loadScriptButton.textContent = 'Skript laden';
+  loadScriptButton.title = 'Script eingeben';
+  loadScriptButton.onclick = function() {
+    if (!document.getElementById('loadScriptButtonGroupDiv')) {
       const loadScriptButtonGroupDiv = document.createElement('div');
+      loadScriptButtonGroupDiv.setAttribute('id', 'loadScriptButtonGroupDiv');
 
       const scriptInputTextArea = document.createElement('textarea');
       scriptInputTextArea.setAttribute('rows', '14');
@@ -126,18 +128,32 @@ repeat-end`;
         document.body.removeChild(loadScriptButtonGroupDiv);
       }
     }
-    buttonGroupDiv.appendChild(loadScriptButton);
+  }
+  buttonGroupDiv.appendChild(loadScriptButton);
 
-    const saveScriptButton = document.createElement('button');
-    saveScriptButton.textContent = 'Speichern';
-    saveScriptButton.title = 'Speichere die aktuellen Antworten';
-    buttonGroupDiv.appendChild(saveScriptButton);
+  const saveScriptButton = document.createElement('button');
+  saveScriptButton.textContent = 'Speichern';
+  saveScriptButton.title = 'Speichere die aktuellen Antworten';
+  saveScriptButton.onclick = function() {
+    storedResponses = tempResponses;
+  }
+  buttonGroupDiv.appendChild(saveScriptButton);
 
-    const restoreResponsesButton = document.createElement('button');
-    restoreResponsesButton.textContent = 'Wiederherstellen';
-    restoreResponsesButton.title = 'Stelle alle gespeicherten Antworten wieder her';
-    buttonGroupDiv.appendChild(restoreResponsesButton);
-    document.body.appendChild(buttonGroupDiv);
-  </script>
+  const restoreResponsesButton = document.createElement('button');
+  restoreResponsesButton.textContent = 'Wiederherstellen';
+  restoreResponsesButton.title = 'Stelle alle gespeicherten Antworten wieder her';
+  restoreResponsesButton.onclick = function() {
+    playerStartData = {
+      unitDefinition: myScript,
+      unitState: {
+        dataParts: { allResponses: storedResponses }
+      }
+    };
+    console.log('restored', storedResponses);
+    playerComponent.startData = playerStartData;
+  }
+  buttonGroupDiv.appendChild(restoreResponsesButton);
+  document.body.appendChild(buttonGroupDiv);
+</script>
 </body>
 </html>
