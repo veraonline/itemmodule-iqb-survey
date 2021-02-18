@@ -97,6 +97,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
       let elementToAdd: UIElement | UIBlock = null;
       if (!line) {
         elementToAdd = new UIElement('0', FieldType.TEXT);
+      } else if (DataService.getKeyword(line) === 'rem') {
+        return;
       } else if (DataService.getKeyword(line) === 'if-start') { // createIfBlock and add to stack
         const ifElseBlock = DataService.createIfElseBlock(line, this.idCounter);
 
