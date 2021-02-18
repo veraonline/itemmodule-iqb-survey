@@ -3,11 +3,8 @@ import { IfThenElseBlock, RepeatBlock, UIBlock } from './classes/UIBlock';
 import { FieldType } from './classes/interfaces';
 import {
   CheckboxElement, DropDownElement, ErrorElement,
-  MultiChoiceElement,
-  NumberInputElement,
-  TextElement,
-  TextInputElement,
-  UIElement
+  MultiChoiceElement, NumberInputElement, TextElement,
+  TextInputElement, UIElement
 } from './classes/UIElement';
 import { environment } from '../environments/environment';
 
@@ -288,24 +285,24 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     return new RepeatBlock(variableParam, textBefore, textAfter, maxBlocks, DataService.getHelpText(line));
   }
 
-  private static getBlockValues(b: UIBlock): Record<string, string> {
-    const myReturn = {};
-    b.elements.forEach((elementOrBlock: UIBlock | UIElement) => {
+  private static getBlockValues(block: UIBlock): Record<string, string> {
+    const values = {};
+    block.elements.forEach((elementOrBlock: UIBlock | UIElement) => {
       if (elementOrBlock instanceof UIElement) {
         if (elementOrBlock.value) {
-          myReturn[elementOrBlock.id] = elementOrBlock.value;
+          values[elementOrBlock.id] = elementOrBlock.value;
         }
       } else if (elementOrBlock instanceof UIBlock) {
         if (elementOrBlock instanceof RepeatBlock && elementOrBlock.value) {
-          myReturn[elementOrBlock.id] = elementOrBlock.value;
+          values[elementOrBlock.id] = elementOrBlock.value;
         }
         const subBlockValues = this.getBlockValues(elementOrBlock);
         Object.keys(subBlockValues).forEach(key => {
-          myReturn[key] = subBlockValues[key];
+          values[key] = subBlockValues[key];
         });
       }
     });
-    return myReturn;
+    return values;
   }
 
   getValues(): Record<string, string> {
