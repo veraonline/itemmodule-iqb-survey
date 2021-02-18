@@ -16,7 +16,7 @@ export abstract class ElementComponent {
   fieldType = FieldType;
 
   set value(value: string) {
-    if (this.elementData) {
+    if (this.elementData) { // TODO warum check? refactor?
       this.elementData.value = value;
       this.elementDataChange.emit(this.elementData);
       this.valueChange.emit(value);
@@ -24,7 +24,7 @@ export abstract class ElementComponent {
   }
 
   get value(): string {
-    if (this.elementData) {
+    if (this.elementData) { // TODO warum check? refactor?
       return this.elementData.value;
     }
     return '';

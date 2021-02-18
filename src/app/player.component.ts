@@ -40,7 +40,7 @@ export class PlayerComponent {
     }
   }
 
-  public tryLeaveNotify(): void {
+  public tryLeaveNotify(): void { // TODO
     this.form.markAllAsTouched();
   }
 
