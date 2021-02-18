@@ -178,10 +178,9 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static createTextElement(line, id): UIElement {
     const textParam = this.getParameter(line, 1);
     if (!textParam) {
-      return DataService.createErrorElement(
-        `Scriptfehler - Parameter fehlt: "${line}"`
-      );
+      return new UIElement('0', FieldType.TEXT);
     }
+
     const capitalizedKeyword = this.getKeyword(line).toUpperCase().replace(/[-]/g, '_');
     const fieldType = FieldType[capitalizedKeyword];
     return new TextElement(id, fieldType, textParam, this.getHelpText(line));
