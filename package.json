@@ -1,6 +1,6 @@
 {
   "name": "verona-player-abi",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
-    "iqb-dev-components": "^1.3.8",
+    "iqb-dev-components": "^1.3.9",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",

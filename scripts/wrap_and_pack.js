@@ -1,7 +1,8 @@
 const fs = require('fs');
 const childProcess = require('child_process');
 
-childProcess.fork('node_modules/iqb-dev-components/src/js_css_packer.js', ['dist', 'verona-player-abi', 'dist']);
+childProcess.fork('node_modules/iqb-dev-components/src/js_css_packer.js',
+  ['dist', 'verona-player-abi', 'dist']);
 
 function readPackageVersion() {
   const packageJsonData = JSON.parse(fs.readFileSync(`${process.cwd()}/package.json`).toString());
@@ -25,4 +26,7 @@ if (args[0] && args[0] === 'dev') {
 
 fileContent = replaceVersion(fileContent);
 
-fs.writeFileSync(`dist/abi_player_${readPackageVersion()}.html`, fileContent, 'utf8');
+fs.writeFileSync('dist/index.html', fileContent, 'utf8');
+
+childProcess.fork('node_modules/iqb-dev-components/src/distpacker.js',
+  ['dist', `abi_player_${readPackageVersion()}.html`]);
