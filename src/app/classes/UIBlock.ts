@@ -109,6 +109,7 @@ export class IfThenElseBlock extends UIBlock {
     if (values[this.conditionVariableName]) {
       if (values[this.conditionVariableName] === this.conditionTrueValue) {
         this.value = 'true';
+        this.elements = this.trueElements;
         this.trueElements.forEach(e => {
           if (e instanceof UIBlock) {
             e.check(values);
@@ -116,6 +117,7 @@ export class IfThenElseBlock extends UIBlock {
         });
       } else {
         this.value = 'false';
+        this.elements = this.falseElements;
         this.falseElements.forEach(e => {
           if (e instanceof UIBlock) {
             e.check(values);
