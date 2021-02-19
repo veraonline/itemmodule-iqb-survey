@@ -84,7 +84,6 @@ export class IfThenElseBlock extends UIBlock {
   conditionTrueValue = '';
   trueElements: (UIElement | UIBlock)[] = [];
   falseElements: (UIElement | UIBlock)[] = [];
-  conditionVariableNameAffix: number = 0;
 
   constructor(id: string, conditionVariableName: string, conditionTrueValue: string) {
     super(id);
