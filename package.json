@@ -1,6 +1,6 @@
 {
   "name": "verona-player-abi",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,8 +9,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --output-hashing=none",
-    "postbuild": "node node_modules/iqb-dev-components/src/js_css_packer.js dist verona-player-abi dist && node scripts/copy-dist-files.js && node node_modules/iqb-dev-components/src/distpacker.js dist",
+    "build": "ng build --prod --output-hashing=none && node scripts/wrap_and_pack.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

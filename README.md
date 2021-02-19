@@ -32,9 +32,9 @@ Building the player:
 npm run build
 ```
 
-This produces an HTML file in the *dist* directory, called `index_packed.html`.
+This produces an HTML file in the *dist* directory, called `abi_player_<version>.html`.
 
-To create a version you can run locally without a host system you may want
-to use the file `wrapper/index_test.html`. Which comes with a prepopulated
-unit script and controls for loading other scripts. To use it, simply rename
-the file to `index.html` (you may want to backup the original) and run the *build* command.
+To create a version which comes with a prepopulated unit script and controls for loading other scripts. Run:
+```
+npm run build -- dev
+```
