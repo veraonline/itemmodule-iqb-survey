@@ -288,10 +288,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static getBlockValues(block: UIBlock): Record<string, string> {
     const values = {};
     block.elements.forEach((elementOrBlock: UIBlock | UIElement) => {
-      if (elementOrBlock instanceof UIElement) {
-        if (elementOrBlock.value) {
-          values[elementOrBlock.id] = elementOrBlock.value;
-        }
+      if (elementOrBlock instanceof UIElement && elementOrBlock.value) {
+        values[elementOrBlock.id] = elementOrBlock.value;
       } else if (elementOrBlock instanceof UIBlock) {
         if (elementOrBlock instanceof RepeatBlock && elementOrBlock.value) {
           values[elementOrBlock.id] = elementOrBlock.value;
