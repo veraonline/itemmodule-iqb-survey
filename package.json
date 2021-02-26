@@ -10,7 +10,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --output-hashing=none && node scripts/wrap_and_pack.js",
-    "test": "ng test",
+    "test": "ng test --no-watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
