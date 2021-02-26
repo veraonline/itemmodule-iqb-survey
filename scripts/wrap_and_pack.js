@@ -28,5 +28,12 @@ fileContent = replaceVersion(fileContent);
 
 fs.writeFileSync('dist/index.html', fileContent, 'utf8');
 
-childProcess.fork('node_modules/iqb-dev-components/src/distpacker.js',
-  ['dist', `abi_player_${readPackageVersion()}.html`]);
+if (args[0] && args[0] === 'dev') {
+  childProcess.fork('node_modules/iqb-dev-components/src/distpacker.js',
+    ['dist', `abi_player_${readPackageVersion()}-dev.html`]);
+} else {
+  childProcess.fork('node_modules/iqb-dev-components/src/distpacker.js',
+    ['dist', `abi_player_${readPackageVersion()}.html`]);
+}
+
+// TODO cleanup files in dist
