@@ -31,7 +31,7 @@ import { RepeatBlock } from '../../classes/UIBlock';
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
           <div *ngFor="let e of elementList.elements">
-            <player-sub-form [elementData]="e" (elementDataChange)="elementDataChange.emit(elementData)" [parentForm]="parentForm"></player-sub-form>
+            <player-sub-form [elementData]="e" (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm"></player-sub-form>
           </div>
         </ng-template>
       </mat-expansion-panel>
