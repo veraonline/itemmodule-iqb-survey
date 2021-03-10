@@ -32,6 +32,7 @@ export class RepeatBlock extends UIBlock {
   properties: Map<PropertyKey, string> = new Map();
   templateElements: (UIElement | UIBlock)[] = [];
   helpText = '';
+  localIDs = []; // array of IDs int he RepeatBlock, so IfBlocks can adjust their cond var
 
   constructor(id: string, textBefore:string = '', textAfter:string = '', maxBlocks: string = '',
               helpText: string = '') {
@@ -66,8 +67,15 @@ export class RepeatBlock extends UIBlock {
         this.templateElements.forEach(templateElement => {
           const newElement = templateElement.getCopy(`_${(i + 1).toString()}`);
           if (newElement instanceof UIElement) {
+            this.localIDs.push(newElement.id.substr(0, newElement.id.length - 2)); // cut away the new affix
             if (oldResponses[newElement.id]) {
               newElement.value = oldResponses[newElement.id];
+            }
+          }
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          if (newElement instanceof IfThenElseBlock) {
+            if (this.localIDs.includes(newElement.conditionVariableName)) {
+              newElement.conditionVariableName += `_${(i + 1).toString()}`;
             }
           }
           newBlock.elements.push(newElement);
@@ -93,7 +101,7 @@ export class IfThenElseBlock extends UIBlock {
 
   getCopy(idSuffix = ''): IfThenElseBlock {
     const copy = new IfThenElseBlock(this.id + idSuffix,
-      this.conditionVariableName + idSuffix,
+      this.conditionVariableName,
       this.conditionTrueValue);
     this.trueElements.forEach(e => {
       copy.trueElements.push(e.getCopy(idSuffix));
