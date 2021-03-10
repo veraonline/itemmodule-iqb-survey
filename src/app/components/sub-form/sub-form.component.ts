@@ -27,22 +27,23 @@ import { ElementComponent } from '../element.component';
     </ng-container>
     <player-repeat *ngIf="elementIsRepeatBlock()" [elementData]="elementData"
                    (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm"></player-repeat>
-    <div *ngIf="elementIsIfThenElseBlockTrue()">
-      <div *ngFor="let e of elementData.trueElements">
-        <player-sub-form [elementData]="e"
-                         [parentForm]="parentForm"
-                         (elementDataChange)="elementDataChange.emit($event)">
-        </player-sub-form>
+    <div *ngIf="elementIsIfThenElseBlock()">
+      <div *ngIf="elementData.value === 'true'">
+        <div *ngFor="let e of elementData.trueElements">
+          <player-sub-form [elementData]="e"
+                           [parentForm]="parentForm"
+                           (elementDataChange)="elementDataChange.emit($event)">
+          </player-sub-form>
+        </div>
+      </div>
+      <div *ngIf="elementData.value === 'false'">
+        <div *ngFor="let e of elementData.falseElements">
+          <player-sub-form [elementData]="e"
+                           (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm">
+          </player-sub-form>
+        </div>
       </div>
     </div>
-    <div *ngIf="elementIsIfThenElseBlockFalse()">
-      <div *ngFor="let e of elementData.falseElements">
-        <player-sub-form [elementData]="e"
-                         (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm">
-        </player-sub-form>
-      </div>
-    </div>
-
   `
 })
 export class SubFormComponent extends ElementComponent {
