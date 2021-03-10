@@ -56,6 +56,11 @@ export class RepeatBlock extends UIBlock {
     return copy;
   }
 
+  check(values: Record<string, string>): void {
+    this.setSubBlockNumber(Number(this.value), values);
+    super.check(values);
+  }
+
   setSubBlockNumber(n: number, oldResponses = {}): void {
     const newBlocks: (UIElement | UIBlock)[] = [];
     const oldSubBlockNumber = this.elements.length;

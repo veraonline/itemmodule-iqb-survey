@@ -84,7 +84,6 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
     const valueNumberTry = Number(this.newValue);
     if (!Number.isNaN(valueNumberTry)) {
       this.value = this.newValue;
-      (this.elementData as RepeatBlock).setSubBlockNumber(valueNumberTry);
     }
   }
 
