@@ -134,6 +134,7 @@ export class IfThenElseBlock extends UIBlock {
       }
     } else {
       this.value = '';
+      this.elements = [];
       this.trueElements.forEach(e => {
         if (e instanceof UIBlock) {
           e.check({});
