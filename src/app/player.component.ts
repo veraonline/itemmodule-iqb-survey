@@ -8,8 +8,8 @@ import { DataService } from './data.service';
 @Component({
   template: `
     <form [formGroup]="form">
-      <div *ngFor="let element of dataService.rootBlock.elements">
-        <player-sub-form [elementData]="element" (elementDataChange)="formValueChanged()"
+      <div *ngFor="let element of dataService.rootBlock.elements" [style.margin]="'0px 30px'">
+        <player-sub-form [elementData]="element" (elementDataChange)="formValueChanged($event)"
                          [parentForm]="form">
         </player-sub-form>
       </div>
