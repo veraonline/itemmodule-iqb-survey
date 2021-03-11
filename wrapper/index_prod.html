@@ -40,12 +40,22 @@
           unitStateType: playerMetadata.getNamedItem('data-supported-unit-state-data-types').value,
         }
       }, '*');
+    }
 
+    function navigationRequested(event) {
+      window.parent.postMessage({
+        type: 'vopUnitNavigationRequestedNotification',
+        sessionId: sessionId,
+        targetRelative: event.detail,
+      }, '*');
     }
 
     const playerComponent = document.createElement('player-component',{ is : 'player-component' });
     playerComponent.addEventListener('valueChanged', (event) => {
       elementValueChanged(event);
+    });
+    playerComponent.addEventListener('navigationRequested', (event) => {
+      navigationRequested(event);
     });
     document.body.appendChild(playerComponent)
 

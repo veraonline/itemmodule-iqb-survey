@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ElementComponent } from '../element.component';
 
 @Component({
@@ -24,6 +24,10 @@ import { ElementComponent } from '../element.component';
       <player-select *ngSwitchCase="fieldType.DROP_DOWN" [elementData]="elementData"
                      (elementDataChange)="elementDataChange.emit(elementData)" [parentForm]="parentForm">
       </player-select>
+      <player-nav-button-group *ngSwitchCase="fieldType.NAV_BUTTON_GROUP" [elementData]="elementData"
+                     (elementDataChange)="elementDataChange.emit(elementData)"
+                     (navigationRequested)="navigationRequested.emit($event)">
+      </player-nav-button-group>
     </ng-container>
     <player-repeat *ngIf="elementIsRepeatBlock()" [elementData]="elementData"
                    (elementDataChange)="elementDataChange.emit(elementData)" [parentForm]="parentForm"></player-repeat>
@@ -45,5 +49,5 @@ import { ElementComponent } from '../element.component';
   `
 })
 export class SubFormComponent extends ElementComponent {
-
+  @Output() navigationRequested = new EventEmitter<string>();
 }

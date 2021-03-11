@@ -10,8 +10,9 @@ import { DataService } from './data.service';
     <p>player-component alive!</p>
     <form [formGroup]="form">
       <div *ngFor="let element of dataService.rootBlock.elements">
-        <player-sub-form [elementData]="element" (elementDataChange)="formValueChanged()"
-                         [parentForm]="form">
+        <player-sub-form [elementData]="element" [parentForm]="form"
+                         (elementDataChange)="formValueChanged()"
+                         (navigationRequested)="this.navigationRequested.emit($event);">
         </player-sub-form>
       </div>
     </form>
@@ -20,6 +21,7 @@ import { DataService } from './data.service';
 })
 export class PlayerComponent {
   @Output() valueChanged = new EventEmitter<string>();
+  @Output() navigationRequested = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
   form = new FormGroup({});
