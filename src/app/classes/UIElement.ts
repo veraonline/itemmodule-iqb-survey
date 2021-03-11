@@ -101,6 +101,11 @@ export class DropDownElement extends InputElement {
     super(variableParam, FieldType.DROP_DOWN, required, helpText);
     if (textBefore) this.properties.set(PropertyKey.TEXT, textBefore);
     if (textAfter) this.properties.set(PropertyKey.TEXT2, textAfter);
+}
+export class NavButtonGroupElement extends UIElement {
+  constructor(options: string) {
+    super('0', FieldType.NAV_BUTTON_GROUP);
+    if (options) this.properties.set(PropertyKey.TEXT2, options);
   }
 }
 

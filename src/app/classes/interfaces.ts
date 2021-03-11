@@ -19,7 +19,8 @@ export enum FieldType {
   MULTIPLE_CHOICE,
   DROP_DOWN,
   REPEAT_CONTROL,
-  SCRIPT_ERROR
+  SCRIPT_ERROR,
+  NAV_BUTTON_GROUP
 }
 
 export interface KeyValuePairString {
@@ -31,4 +32,12 @@ export interface StartData {
   unitState: {
     dataParts: KeyValuePairString
   };
+}
+
+export enum NavButtonOptions {
+  'previous',
+  'next',
+  'first',
+  'last',
+  'end'
 }

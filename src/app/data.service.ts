@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { IfThenElseBlock, RepeatBlock, UIBlock } from './classes/UIBlock';
-import { FieldType } from './classes/interfaces';
+import { FieldType, NavButtonOptions } from './classes/interfaces';
 import {
   CheckboxElement, DropDownElement, ErrorElement,
-  MultiChoiceElement, NumberInputElement, TextElement,
+  MultiChoiceElement, NavButtonGroupElement, NumberInputElement, TextElement,
   TextInputElement, UIElement
 } from './classes/UIElement';
 import { environment } from '../environments/environment';
@@ -169,6 +169,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
         return DataService.createMultiChoiceElement(line, id);
       case 'drop-down':
         return DataService.createDropDownElement(line, id);
+      case 'nav-button-group':
+        return DataService.createNavButtonGroupElement(line, id);
       default:
         return DataService.createErrorElement(`Scriptfehler - Schlüsselwort nicht erkannt: "${line}"`);
     }
@@ -254,6 +256,24 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     const textBefore = this.getParameter(line, 3);
     const textAfter = this.getParameter(line, 4);
     return new DropDownElement(id, variableParam, required, textBefore, textAfter, this.getHelpText(line));
+  }
+
+  private static createNavButtonGroupElement(line, id): UIElement {
+    const options = this.getParameter(line, 1);
+    const optionList = options.split('##');
+    if (optionList.length < 1 || (optionList.length === 1 && optionList[0] === '')) {
+      return DataService.createErrorElement(
+        `Scriptfehler - Parameter fehlt: "${line}"`
+      );
+    }
+    for (const option of optionList) {
+      if (!Object.values(NavButtonOptions).includes(option)) {
+        return DataService.createErrorElement(
+          `Scriptfehler - Unbekannter Parameter: "${option}"`
+        );
+      }
+    }
+    return new NavButtonGroupElement(options);
   }
 
   private static createErrorElement(errorText: string): UIElement {
