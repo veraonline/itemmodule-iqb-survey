@@ -12,6 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
 
 import { SubFormComponent } from './components/sub-form/sub-form.component';
 import { RepeatComponent } from './components/repeat/repeat.component';
@@ -20,6 +21,7 @@ import { SelectComponent } from './components/select/select.component';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { InputComponent } from './components/input/input.component';
 import { TextComponent } from './components/text/text.component';
+import { NavButtonsComponent } from './components/nav-buttons/nav-buttons.component';
 
 import { PlayerComponent } from './player.component';
 
@@ -32,6 +34,7 @@ import { PlayerComponent } from './player.component';
     InputErrorPipe,
     RepeatComponent,
     SubFormComponent,
+    NavButtonsComponent,
     PlayerComponent
   ],
   imports: [
@@ -46,7 +49,8 @@ import { PlayerComponent } from './player.component';
     MatRadioModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatIconModule
   ],
   entryComponents: [
     PlayerComponent
