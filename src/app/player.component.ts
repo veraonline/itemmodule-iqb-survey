@@ -7,9 +7,8 @@ import { DataService } from './data.service';
 
 @Component({
   template: `
-    <p>player-component alive!</p>
     <form [formGroup]="form">
-      <div *ngFor="let element of dataService.rootBlock.elements">
+      <div *ngFor="let element of dataService.rootBlock.elements" [style.margin]="'0px 30px'">
         <player-sub-form [elementData]="element" [parentForm]="form"
                          (elementDataChange)="formValueChanged()"
                          (navigationRequested)="this.navigationRequested.emit($event);">

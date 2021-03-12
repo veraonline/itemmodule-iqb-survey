@@ -44,6 +44,9 @@ export class DataService {
     if (scriptKeyword === '') {
       return 'Scriptfehler: Kein Keyword gefunden!';
     }
+    if (scriptKeyword !== 'iqb-scripted') {
+      return 'Scriptfehler: Typ muss iqb-scripted sein!';
+    }
     const versionString = DataService.getParameter(headerLine, 1);
     if (!versionString) {
       return 'Scriptfehler: Kein Version-Parameter gefunden!';

@@ -59,11 +59,7 @@ export abstract class ElementComponent {
     return this.elementData && this.elementData instanceof RepeatBlock;
   }
 
-  elementIsIfThenElseBlockTrue(): boolean {
-    return this.elementData && this.elementData instanceof IfThenElseBlock && this.elementData.value === 'true';
-  }
-
-  elementIsIfThenElseBlockFalse(): boolean {
-    return this.elementData && this.elementData instanceof IfThenElseBlock && this.elementData.value === 'false';
+  elementIsIfThenElseBlock(): boolean {
+    return this.elementData && this.elementData instanceof IfThenElseBlock; // TODO why check?
   }
 }

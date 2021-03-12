@@ -20,6 +20,10 @@ describe('DataService', () => {
     errorText = (dataService.rootBlock.elements[0] as UIElement).properties.get(PropertyKey.TEXT);
     expect(errorText).toEqual('Scriptfehler: Kein Keyword gefunden!');
 
+    dataService.setElements(['bla'], {});
+    errorText = (dataService.rootBlock.elements[0] as UIElement).properties.get(PropertyKey.TEXT);
+    expect(errorText).toEqual('Scriptfehler: Typ muss iqb-scripted sein!');
+
     dataService.setElements(['iqb-scripted'], {});
     errorText = (dataService.rootBlock.elements[0] as UIElement).properties.get(PropertyKey.TEXT);
     expect(errorText).toEqual('Scriptfehler: Kein Version-Parameter gefunden!');

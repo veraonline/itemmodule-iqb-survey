@@ -19,7 +19,11 @@ import { RepeatBlock } from '../../classes/UIBlock';
             {{numberInputControl.errors | errorTransform}}
           </mat-error>
         </mat-form-field>
-        <button type="button" mat-raised-button (click)="applyRepeatNumber()" matTooltip="Neue Anzahl anwenden" [disabled]="numberInputControl.invalid || value === newValue">Anwenden</button>
+        <button type="button" mat-raised-button matTooltip="Neue Anzahl anwenden"
+                [disabled]="numberInputControl.invalid || value === newValue"
+                (click)="applyRepeatNumber()">
+          Anwenden
+        </button>
       </div>
     </div>
     <mat-accordion fxLayout="column" multi="false" *ngIf="elementDataAsRepeatBlock.elements.length > 0">
@@ -31,7 +35,9 @@ import { RepeatBlock } from '../../classes/UIBlock';
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
           <div *ngFor="let e of elementList.elements">
-            <player-sub-form [elementData]="e" (elementDataChange)="elementDataChange.emit(elementData)" [parentForm]="parentForm"></player-sub-form>
+            <player-sub-form [elementData]="e" [parentForm]="parentForm"
+                             (elementDataChange)="elementDataChange.emit($event)">
+            </player-sub-form>
           </div>
         </ng-template>
       </mat-expansion-panel>
@@ -78,7 +84,6 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
     const valueNumberTry = Number(this.newValue);
     if (!Number.isNaN(valueNumberTry)) {
       this.value = this.newValue;
-      (this.elementData as RepeatBlock).setSubBlockNumber(valueNumberTry);
     }
   }
 
