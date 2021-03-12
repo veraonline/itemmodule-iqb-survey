@@ -95,7 +95,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private parseScriptLines(oldResponses: Record<string, string>): void {
     this.scriptLines.forEach(line => {
       let elementToAdd: UIElement | UIBlock = null;
-      if (!line) {
+      if (line.trim() === '') {
         elementToAdd = new UIElement('0', FieldType.TEXT);
       } else if (DataService.getKeyword(line) === 'rem') {
         return;
