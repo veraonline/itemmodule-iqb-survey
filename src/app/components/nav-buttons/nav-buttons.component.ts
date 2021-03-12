@@ -17,7 +17,7 @@ import { UIElement } from '../../classes/UIElement';
       </div>
     </div>
   `,
-  styles: ['button {margin: 0 5px}']
+  styles: ['button {margin: 20px 5px}']
 })
 export class NavButtonsComponent extends ElementComponent implements OnInit {
   @Output() navigationRequested = new EventEmitter<string>();
