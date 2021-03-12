@@ -33,15 +33,15 @@ export class NavButtonsComponent extends ElementComponent implements OnInit {
       tooltip: 'Nächstes Item'
     },
     first: {
-      iconName: 'skip_previous',
+      iconName: 'first_page',
       tooltip: 'Zum ersten Item'
     },
     last: {
-      iconName: 'skip_next',
+      iconName: 'last_page',
       tooltip: 'Zum letzten Item'
     },
     end: {
-      iconName: 'keyboard_capslock',
+      iconName: 'keyboard_arrow_up',
       tooltip: 'Beenden'
     }
   };
