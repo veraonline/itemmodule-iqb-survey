@@ -83,6 +83,7 @@ export class CheckboxElement extends InputElement {
     super(variableParam, FieldType.CHECKBOX, required, helpText);
     if (textBefore) this.properties.set(PropertyKey.TEXT, textBefore);
     if (textAfter) this.properties.set(PropertyKey.TEXT2, textAfter);
+    this.value = 'false';
   }
 }
 

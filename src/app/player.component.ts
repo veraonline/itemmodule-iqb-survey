@@ -36,6 +36,7 @@ export class PlayerComponent {
         storedResponses = JSON.parse(startData.unitState.dataParts.allResponses);
       }
       this.dataService.setElements(startData.unitDefinition.split('\n'), storedResponses);
+      this.formValueChanged();
     } else {
       console.warn('player: (setStartData) no unitDefinition is given');
     }
