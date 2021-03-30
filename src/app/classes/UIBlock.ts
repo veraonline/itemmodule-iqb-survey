@@ -119,35 +119,20 @@ export class IfThenElseBlock extends UIBlock {
   }
 
   check(values: Record<string, string>): void {
-    if (values[this.conditionVariableName]) {
-      if (values[this.conditionVariableName] === this.conditionTrueValue) {
-        this.value = 'true';
-        this.elements = this.trueElements;
-        this.trueElements.forEach(e => {
-          if (e instanceof UIBlock) {
-            e.check(values);
-          }
-        });
-      } else {
-        this.value = 'false';
-        this.elements = this.falseElements;
-        this.falseElements.forEach(e => {
-          if (e instanceof UIBlock) {
-            e.check(values);
-          }
-        });
-      }
-    } else {
-      this.value = '';
-      this.elements = [];
+    if (values[this.conditionVariableName] === this.conditionTrueValue) {
+      this.value = 'true';
+      this.elements = this.trueElements;
       this.trueElements.forEach(e => {
         if (e instanceof UIBlock) {
-          e.check({});
+          e.check(values);
         }
       });
+    } else {
+      this.value = 'false';
+      this.elements = this.falseElements;
       this.falseElements.forEach(e => {
         if (e instanceof UIBlock) {
-          e.check({});
+          e.check(values);
         }
       });
     }
