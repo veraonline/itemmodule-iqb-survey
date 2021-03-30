@@ -26,7 +26,7 @@ export class DataService {
     return this._idCounter.toString();
   }
 
-  setElements(scriptLines: string[], oldResponses: Record<string, string>): void {
+  setElements(scriptLines: string[], storedResponses: Record<string, string>): void {
     this.rootBlock = new UIBlock('0');
     const errorMessage = DataService.checkScriptHeader(scriptLines[0]);
     if (errorMessage !== '') {
@@ -34,8 +34,8 @@ export class DataService {
     } else {
       scriptLines.splice(0, 1);
       this.scriptLines = scriptLines;
-      this.parseScriptLines(oldResponses);
-      this.rootBlock.check(oldResponses);
+      this.parseScriptLines(storedResponses);
+      this.rootBlock.check(storedResponses);
     }
   }
 
@@ -92,7 +92,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
 
   // TODO basic error check: same amount of start and ends for example, fehlende parameter
   // TODO remove rem lines
-  private parseScriptLines(oldResponses: Record<string, string>): void {
+  private parseScriptLines(storedResponses: Record<string, string>): void {
     this.scriptLines.forEach(line => {
       let elementToAdd: UIElement | UIBlock = null;
       if (line.trim() === '') {
@@ -130,8 +130,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
       }
 
       if (elementToAdd) {
-        if (oldResponses[elementToAdd.id]) {
-          elementToAdd.value = oldResponses[elementToAdd.id];
+        if (storedResponses[elementToAdd.id]) {
+          elementToAdd.value = storedResponses[elementToAdd.id];
         }
 
         if (this.latestBlock.length > 0) {

@@ -3,12 +3,15 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../out-tsc/e2e",
-    "module": "commonjs",
+    "module": "jasmine-node",
     "target": "es2018",
     "types": [
       "jasmine",
       "jasminewd2",
       "node"
-    ]
+    ],
+    "env": {
+      "jasmine": true
+    }
   }
 }
