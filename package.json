@@ -12,7 +12,7 @@
     "build": "ng build --prod --output-hashing=none && node scripts/wrap_and_pack.js",
     "test": "ng test --no-watch",
     "lint": "ng lint",
-    "e2e": "jasmine --config=e2e/jasmine.json"
+    "e2e": "jasmine --config=e2e/jasmine.json --version=$npm_package_version"
   },
   "private": true,
   "dependencies": {
