@@ -61,7 +61,7 @@ export class RepeatBlock extends UIBlock {
     super.check(values);
   }
 
-  setSubBlockNumber(n: number, oldResponses = {}): void {
+  setSubBlockNumber(n: number, values = {}): void {
     const newBlocks: (UIElement | UIBlock)[] = [];
     const oldSubBlockNumber = this.elements.length;
     for (let i = 0; i < n; i++) {
@@ -73,8 +73,8 @@ export class RepeatBlock extends UIBlock {
           const newElement = templateElement.getCopy(`_${(i + 1).toString()}`);
           if (newElement instanceof UIElement) {
             this.localIDs.push(newElement.id.substr(0, newElement.id.length - 2)); // cut away the new affix
-            if (oldResponses[newElement.id]) {
-              newElement.value = oldResponses[newElement.id];
+            if (values[newElement.id]) {
+              newElement.value = values[newElement.id];
             }
           }
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
