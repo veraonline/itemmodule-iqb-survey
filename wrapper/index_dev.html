@@ -58,7 +58,10 @@ repeat-start::examineecount::Wie viele Prüflinge gibt es?::Angaben zu Prüfling
   repeat-start::examineecount::Wie viele Prüflinge gibt es2?::Angaben zu Prüfling::20
     text::Repeat Inhalt2
   repeat-end
-repeat-end`;
+repeat-end
+nav-button-group::previous##next##first##last##end
+nav-button-group::dummy
+nav-button-group::`;
   let playerStartData = {
     unitDefinition: '',
     unitState: {
@@ -67,12 +70,20 @@ repeat-end`;
   };
 
   function elementValueChanged(event) {
+    console.log('host: elementValueChanged', event);
     tempResponses = event.detail;
+  }
+
+  function navigationRequested(event) {
+    console.log('host: navigationRequested', event.detail);
   }
 
   const playerComponent = document.createElement('player-component',{ is : 'player-component' });
   playerComponent.addEventListener('valueChanged', (event) => {
     elementValueChanged(event);
+  });
+  playerComponent.addEventListener('navigationRequested', (event) => {
+    navigationRequested(event);
   });
   document.body.appendChild(playerComponent)
 

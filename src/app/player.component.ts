@@ -9,8 +9,9 @@ import { DataService } from './data.service';
   template: `
     <form [formGroup]="form">
       <div *ngFor="let element of dataService.rootBlock.elements" [style.margin]="'0px 30px'">
-        <player-sub-form [elementData]="element" (elementDataChange)="formValueChanged($event)"
-                         [parentForm]="form">
+        <player-sub-form [elementData]="element" [parentForm]="form"
+                         (elementDataChange)="formValueChanged()"
+                         (navigationRequested)="this.navigationRequested.emit($event);">
         </player-sub-form>
       </div>
     </form>
@@ -19,6 +20,7 @@ import { DataService } from './data.service';
 })
 export class PlayerComponent {
   @Output() valueChanged = new EventEmitter<string>();
+  @Output() navigationRequested = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
   form = new FormGroup({});
@@ -34,6 +36,7 @@ export class PlayerComponent {
         storedResponses = JSON.parse(startData.unitState.dataParts.allResponses);
       }
       this.dataService.setElements(startData.unitDefinition.split('\n'), storedResponses);
+      this.formValueChanged();
     } else {
       console.warn('player: (setStartData) no unitDefinition is given');
     }

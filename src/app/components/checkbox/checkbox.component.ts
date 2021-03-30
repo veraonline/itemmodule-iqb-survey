@@ -50,7 +50,7 @@ export class CheckboxComponent extends ElementComponent implements OnInit, OnDes
       if (this.checkboxControl.valid && this.checkboxControl.value === true) {
         this.value = 'true';
       } else {
-        this.value = '';
+        this.value = 'false';
       }
     });
   }
