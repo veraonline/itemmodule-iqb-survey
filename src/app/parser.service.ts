@@ -14,8 +14,8 @@ type IfElementCompoundObject = Record<IfStackObjectKey, UIBlock | boolean>; // h
 @Injectable({
   providedIn: 'root'
 })
-export class DataService {
-  rootBlock: UIBlock = new UIBlock('0');
+export class ParserService {
+  private rootBlock: UIBlock;
   private scriptLines: string[] = [];
   private _idCounter = 0;
 
@@ -26,28 +26,28 @@ export class DataService {
     return this._idCounter.toString();
   }
 
-  setElements(scriptLines: string[], storedResponses: Record<string, string>): void {
+  parseUnitDefinition(scriptLines: string[]): UIBlock {
     this.rootBlock = new UIBlock('0');
-    const errorMessage = DataService.checkScriptHeader(scriptLines[0]);
+    const errorMessage = ParserService.checkScriptHeader(scriptLines[0]);
     if (errorMessage !== '') {
-      this.rootBlock.elements.push(DataService.createErrorElement(errorMessage));
+      this.rootBlock.elements.push(ParserService.createErrorElement(errorMessage));
     } else {
       scriptLines.splice(0, 1);
       this.scriptLines = scriptLines;
-      this.parseScriptLines(storedResponses);
-      this.rootBlock.check(storedResponses);
+      this.parseScriptLines();
     }
+    return this.rootBlock;
   }
 
   private static checkScriptHeader(headerLine: string): string {
-    const scriptKeyword = DataService.getKeyword(headerLine);
+    const scriptKeyword = ParserService.getKeyword(headerLine);
     if (scriptKeyword === '') {
       return 'Scriptfehler: Kein Keyword gefunden!';
     }
     if (scriptKeyword !== 'iqb-scripted') {
       return 'Scriptfehler: Typ muss iqb-scripted sein!';
     }
-    const versionString = DataService.getParameter(headerLine, 1);
+    const versionString = ParserService.getParameter(headerLine, 1);
     if (!versionString) {
       return 'Scriptfehler: Kein Version-Parameter gefunden!';
     }
@@ -55,7 +55,7 @@ export class DataService {
     if (!versionNumbers || versionNumbers.length < 2) {
       return 'Scriptfehler: Version-Parameter Fehlerhaft!';
     }
-    return DataService.checkVersion(Number(versionNumbers[0]), Number(versionNumbers[1]));
+    return ParserService.checkVersion(Number(versionNumbers[0]), Number(versionNumbers[1]));
   }
 
   private static checkVersion(majorVersion: number, minorVersion: number): string {
@@ -92,15 +92,16 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
 
   // TODO basic error check: same amount of start and ends for example, fehlende parameter
   // TODO remove rem lines
-  private parseScriptLines(storedResponses: Record<string, string>): void {
+  // private parseScriptLines(storedResponses: Record<string, string>): void {
+  private parseScriptLines(): void {
     this.scriptLines.forEach(line => {
       let elementToAdd: UIElement | UIBlock = null;
       if (line.trim() === '') {
         elementToAdd = new UIElement('0', FieldType.TEXT);
-      } else if (DataService.getKeyword(line) === 'rem') {
+      } else if (ParserService.getKeyword(line) === 'rem') {
         return;
-      } else if (DataService.getKeyword(line) === 'if-start') { // createIfBlock and add to stack
-        const ifElseBlock = DataService.createIfElseBlock(line, this.idCounter);
+      } else if (ParserService.getKeyword(line) === 'if-start') { // createIfBlock and add to stack
+        const ifElseBlock = ParserService.createIfElseBlock(line, this.idCounter);
 
         if (ifElseBlock instanceof UIElement) { // error case
           elementToAdd = ifElseBlock;
@@ -110,30 +111,26 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
             uiBlock: ifElseBlock
           });
         }
-      } else if (DataService.getKeyword(line) === 'if-else') { // switch to true branch of last object
+      } else if (ParserService.getKeyword(line) === 'if-else') { // switch to true branch of last object
         (this.latestBlock[this.latestBlock.length - 1] as Record<IfStackObjectKey, UIBlock | boolean>).isTrueBranch =
           false;
-      } else if (DataService.getKeyword(line) === 'if-end') { // remove last object and mark for adding
+      } else if (ParserService.getKeyword(line) === 'if-end') { // remove last object and mark for adding
         elementToAdd =
           (this.latestBlock.pop() as Record<IfStackObjectKey, UIBlock | boolean>).uiBlock as unknown as UIBlock;
-      } else if (DataService.getKeyword(line) === 'repeat-start') {
-        const repeatBlockElement = DataService.createRepeatBlock(line);
+      } else if (ParserService.getKeyword(line) === 'repeat-start') {
+        const repeatBlockElement = ParserService.createRepeatBlock(line);
         if (repeatBlockElement instanceof UIElement) {
           elementToAdd = repeatBlockElement;
         } else {
           this.latestBlock.push(repeatBlockElement);
         }
-      } else if (DataService.getKeyword(line) === 'repeat-end') {
+      } else if (ParserService.getKeyword(line) === 'repeat-end') {
         elementToAdd = this.latestBlock.pop() as RepeatBlock;
       } else {
-        elementToAdd = DataService.parseElement(line, this.idCounter);
+        elementToAdd = ParserService.parseElement(line, this.idCounter);
       }
 
       if (elementToAdd) {
-        if (storedResponses[elementToAdd.id]) {
-          elementToAdd.value = storedResponses[elementToAdd.id];
-        }
-
         if (this.latestBlock.length > 0) {
           const latestBlock = this.latestBlock[this.latestBlock.length - 1];
           if (latestBlock instanceof RepeatBlock) {
@@ -151,31 +148,31 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   }
 
   private static parseElement(line: string, id): UIElement {
-    const keyword = DataService.getKeyword(line);
+    const keyword = ParserService.getKeyword(line);
     switch (keyword) {
       case 'text': // falls through
       case 'header': // falls through
       case 'title': // falls through
       case 'html':
-        return DataService.createTextElement(line, id);
+        return ParserService.createTextElement(line, id);
       case 'hr':
         return new UIElement('0', FieldType.HR);
       case 'rem': // TODO remove
         return new UIElement('0', FieldType.TEXT);
       case 'input-text':
-        return DataService.createTextInputElement(line, id);
+        return ParserService.createTextInputElement(line, id);
       case 'input-number':
-        return DataService.createNumberInputElement(line, id);
+        return ParserService.createNumberInputElement(line, id);
       case 'checkbox':
-        return DataService.createCheckboxElement(line, id);
+        return ParserService.createCheckboxElement(line, id);
       case 'multiple-choice':
-        return DataService.createMultiChoiceElement(line, id);
+        return ParserService.createMultiChoiceElement(line, id);
       case 'drop-down':
-        return DataService.createDropDownElement(line, id);
+        return ParserService.createDropDownElement(line, id);
       case 'nav-button-group':
-        return DataService.createNavButtonGroupElement(line, id);
+        return ParserService.createNavButtonGroupElement(line, id);
       default:
-        return DataService.createErrorElement(`Scriptfehler - Schlüsselwort nicht erkannt: "${line}"`);
+        return ParserService.createErrorElement(`Scriptfehler - Schlüsselwort nicht erkannt: "${line}"`);
     }
   }
 
@@ -193,7 +190,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static createTextInputElement(line, id): UIElement {
     const variableParam = this.getParameter(line, 1);
     if (!variableParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -209,7 +206,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static createNumberInputElement(line, id): UIElement {
     const variableParam = this.getParameter(line, 1);
     if (!variableParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -225,7 +222,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static createCheckboxElement(line: string, id: string) {
     const variableParam = this.getParameter(line, 1);
     if (!variableParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -238,7 +235,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static createMultiChoiceElement(line: string, id: string) {
     const variableParam = this.getParameter(line, 1);
     if (!variableParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -251,7 +248,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   private static createDropDownElement(line: string, id: string) {
     const variableParam = this.getParameter(line, 1);
     if (!variableParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -265,13 +262,13 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     const options = this.getParameter(line, 1);
     const optionList = options.split('##');
     if (optionList.length < 1 || (optionList.length === 1 && optionList[0] === '')) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
     for (const option of optionList) {
       if (!Object.values(NavButtonOptions).includes(option)) {
-        return DataService.createErrorElement(
+        return ParserService.createErrorElement(
           `Scriptfehler - Unbekannter Parameter: "${option}"`
         );
       }
@@ -284,10 +281,10 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   }
 
   private static createIfElseBlock(line, id): UIElement | UIBlock {
-    const variableParam = DataService.getParameter(line, 1);
-    const valueParam = DataService.getParameter(line, 2);
+    const variableParam = ParserService.getParameter(line, 1);
+    const valueParam = ParserService.getParameter(line, 2);
     if (!variableParam || !valueParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -295,9 +292,9 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   }
 
   private static createRepeatBlock(line): UIElement | RepeatBlock {
-    const variableParam = DataService.getParameter(line, 1);
+    const variableParam = ParserService.getParameter(line, 1);
     if (!variableParam) {
-      return DataService.createErrorElement(
+      return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
@@ -305,28 +302,6 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     const textBefore = this.getParameter(line, 2);
     const textAfter = this.getParameter(line, 3);
     const maxBlocks = this.getParameter(line, 4);
-    return new RepeatBlock(variableParam, textBefore, textAfter, maxBlocks, DataService.getHelpText(line));
-  }
-
-  private static getBlockValues(block: UIBlock): Record<string, string> {
-    const values = {};
-    block.elements.forEach((elementOrBlock: UIBlock | UIElement) => {
-      if (elementOrBlock instanceof UIElement && elementOrBlock.value) {
-        values[elementOrBlock.id] = elementOrBlock.value;
-      } else if (elementOrBlock instanceof UIBlock) {
-        if (elementOrBlock instanceof RepeatBlock && elementOrBlock.value) {
-          values[elementOrBlock.id] = elementOrBlock.value;
-        }
-        const subBlockValues = this.getBlockValues(elementOrBlock);
-        Object.keys(subBlockValues).forEach(key => {
-          values[key] = subBlockValues[key];
-        });
-      }
-    });
-    return values;
-  }
-
-  getValues(): Record<string, string> {
-    return DataService.getBlockValues(this.rootBlock);
+    return new RepeatBlock(variableParam, textBefore, textAfter, maxBlocks, ParserService.getHelpText(line));
   }
 }

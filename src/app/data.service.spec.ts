@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DataService } from './data.service';
+import { ParserService } from './parser.service';
 import {
   CheckboxElement,
   DropDownElement, MultiChoiceElement,
@@ -12,11 +12,11 @@ import { PropertyKey } from './classes/interfaces';
 import { IfThenElseBlock, RepeatBlock } from "./classes/UIBlock";
 
 describe('DataService', () => {
-  let dataService: DataService;
+  let dataService: ParserService;
   beforeEach(() => {
     TestBed.configureTestingModule({
     });
-    dataService = TestBed.inject(DataService);
+    dataService = TestBed.inject(ParserService);
   });
 
   it('should check input script header for validity and accepted version', () => {
