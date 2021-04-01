@@ -127,9 +127,7 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
   }
 
   ngOnDestroy(): void {
-    if (this.valueChangeSubscription !== null) {
-      this.valueChangeSubscription.unsubscribe();
-      this.parentForm.removeControl(this.elementData.id);
-    }
+    this.valueChangeSubscription.unsubscribe();
+    this.parentForm.removeControl(this.elementData.id);
   }
 }

@@ -56,9 +56,7 @@ export class CheckboxComponent extends ElementComponent implements OnInit, OnDes
   }
 
   ngOnDestroy(): void {
-    if (this.valueChangeSubscription !== null) {
-      this.valueChangeSubscription.unsubscribe();
-      this.parentForm.removeControl(this.elementData.id);
-    }
+    this.valueChangeSubscription.unsubscribe();
+    this.parentForm.removeControl(this.elementData.id);
   }
 }

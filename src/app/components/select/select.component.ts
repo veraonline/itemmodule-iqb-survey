@@ -74,9 +74,7 @@ export class SelectComponent extends ElementComponent implements OnInit, OnDestr
   }
 
   ngOnDestroy(): void {
-    if (this.valueChangeSubscription !== null) {
-      this.valueChangeSubscription.unsubscribe();
-      this.parentForm.removeControl(this.elementData.id);
-    }
+    this.valueChangeSubscription.unsubscribe();
+    this.parentForm.removeControl(this.elementData.id);
   }
 }
