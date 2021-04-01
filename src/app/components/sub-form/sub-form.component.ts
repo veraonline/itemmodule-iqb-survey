@@ -32,20 +32,8 @@ import { ElementComponent } from '../element.component';
     <player-repeat *ngIf="elementIsRepeatBlock()" [elementData]="elementData"
                    (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm"></player-repeat>
     <div *ngIf="elementIsIfThenElseBlock()">
-      <div *ngIf="elementData.value === 'true'">
-        <div *ngFor="let e of elementData.trueElements">
-          <player-sub-form [elementData]="e"
-                           [parentForm]="parentForm"
-                           (elementDataChange)="elementDataChange.emit($event)">
-          </player-sub-form>
-        </div>
-      </div>
-      <div *ngIf="elementData.value === 'false'">
-        <div *ngFor="let e of elementData.falseElements">
-          <player-sub-form [elementData]="e"
-                           (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm">
-          </player-sub-form>
-        </div>
+      <div *ngFor="let e of elementData.elements">
+        <player-sub-form [elementData]="e" [parentForm]="parentForm"></player-sub-form>
       </div>
     </div>
   `
