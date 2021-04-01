@@ -21,9 +21,7 @@ export class UIBlock implements UIElementOrBlock {
 
   check(values: Record<string, string>): void {
     this.elements.forEach(e => {
-      if (e instanceof UIBlock) {
-        e.check(values);
-      }
+      e.check(values);
     });
   }
 }
@@ -57,6 +55,9 @@ export class RepeatBlock extends UIBlock {
   }
 
   check(values: Record<string, string>): void {
+    if (values[this.id]) {
+      this.value = values[this.id];
+    }
     this.setSubBlockNumber(Number(this.value), values);
     super.check(values);
   }

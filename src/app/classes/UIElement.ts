@@ -21,6 +21,12 @@ export class UIElement implements UIElementOrBlock {
     this.helpText = helpText;
   }
 
+  check(values: Record<string, string>): void {
+    if (values[this.id]) {
+      this.value = values[this.id];
+    }
+  }
+
   getCopy(idSuffix = ''): UIElement {
     const copy = new UIElement(this.id + idSuffix, this.fieldType, this.helpText);
     this.properties.forEach((value, key) => {
