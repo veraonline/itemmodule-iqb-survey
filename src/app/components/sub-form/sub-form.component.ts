@@ -33,7 +33,8 @@ import { ElementComponent } from '../element.component';
                    (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm"></player-repeat>
     <div *ngIf="elementIsIfThenElseBlock()">
       <div *ngFor="let e of elementData.elements">
-        <player-sub-form [elementData]="e" [parentForm]="parentForm"></player-sub-form>
+        <player-sub-form [elementData]="e" [parentForm]="parentForm"
+                         (elementDataChange)="elementDataChange.emit($event)"></player-sub-form>
       </div>
     </div>
   `
