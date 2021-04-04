@@ -42,9 +42,6 @@ export class CheckboxComponent extends ElementComponent implements OnInit, OnDes
     if (elementData.required) {
       this.checkboxControl.setValidators(Validators.requiredTrue);
     }
-    if (this.value === 'true') {
-      this.checkboxControl.setValue(true);
-    }
     this.parentForm.addControl(elementData.id, this.checkboxControl);
     this.valueChangeSubscription = this.checkboxControl.valueChanges.subscribe(() => {
       if (this.checkboxControl.valid && this.checkboxControl.value === true) {
@@ -53,6 +50,7 @@ export class CheckboxComponent extends ElementComponent implements OnInit, OnDes
         this.value = 'false';
       }
     });
+    this.checkboxControl.setValue(this.value === 'true');
   }
 
   ngOnDestroy(): void {
