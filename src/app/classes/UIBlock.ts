@@ -80,9 +80,7 @@ export class RepeatBlock extends UIBlock {
           }
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           if (newElement instanceof IfThenElseBlock) {
-            if (this.localIDs.includes(newElement.conditionVariableName)) {
-              newElement.conditionVariableName += `_${(i + 1).toString()}`;
-            }
+            this.affixIfBlockConditionVariable(newElement, i);
           }
           newBlock.elements.push(newElement);
         });
@@ -90,6 +88,24 @@ export class RepeatBlock extends UIBlock {
       }
     }
     this.elements = newBlocks;
+  }
+
+  affixIfBlockConditionVariable(newElement: IfThenElseBlock, index: number) {
+    if (this.localIDs.includes(newElement.conditionVariableName)) {
+      newElement.conditionVariableName += `_${(index + 1).toString()}`;
+    }
+    newElement.trueElements.forEach(element => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      if (element instanceof IfThenElseBlock) {
+        this.affixIfBlockConditionVariable(element, index);
+      }
+    });
+    newElement.falseElements.forEach(element => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      if (element instanceof IfThenElseBlock) {
+        this.affixIfBlockConditionVariable(element, index);
+      }
+    });
   }
 }
 
