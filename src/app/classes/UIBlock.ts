@@ -6,9 +6,18 @@ export class UIBlock implements UIElementOrBlock {
   id = '';
   value = '';
   elements: (UIElement | UIBlock)[] = [];
+  hidden: boolean = false;
 
   constructor(id: string) {
     this.id = id;
+  }
+
+  getValues(): Record<string, string> {
+    let values = {};
+    this.elements.forEach(element => {
+      values = { ...values, ...element.getValues() };
+    });
+    return { ...values, [this.id]: this.value };
   }
 
   getCopy(idSuffix = ''): UIBlock {
@@ -20,9 +29,14 @@ export class UIBlock implements UIElementOrBlock {
   }
 
   check(values: Record<string, string>): void {
+    this.hidden = false;
     this.elements.forEach(e => {
       e.check(values);
     });
+  }
+
+  hide(): void {
+    this.hidden = true;
   }
 }
 
@@ -60,6 +74,14 @@ export class RepeatBlock extends UIBlock {
     }
     this.setSubBlockNumber(Number(this.value), values);
     super.check(values);
+  }
+
+  getValues(): Record<string, string> {
+    let values = {};
+    this.elements.forEach(element => {
+      values = { ...values, ...element.getValues() };
+    });
+    return { ...values, [this.id]: this.value };
   }
 
   setSubBlockNumber(n: number, values = {}): void {
@@ -139,15 +161,29 @@ export class IfThenElseBlock extends UIBlock {
     if (String(values[this.conditionVariableName]) === this.conditionTrueValue) {
       this.value = 'true';
       this.elements = this.trueElements;
+      this.falseElements.forEach(e => {
+        e.hide();
+      });
       this.trueElements.forEach(e => {
         e.check(values);
       });
     } else {
       this.value = 'false';
       this.elements = this.falseElements;
+      this.trueElements.forEach(e => {
+        e.hide();
+      });
       this.falseElements.forEach(e => {
         e.check(values);
       });
     }
+  }
+
+  getValues(): Record<string, string> {
+    let values = {};
+    this.elements.forEach(element => {
+      values = { ...values, ...element.getValues() };
+    });
+    return { ...values };
   }
 }

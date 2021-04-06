@@ -15,6 +15,8 @@ export class UIElement implements UIElementOrBlock {
   properties: Map<PropertyKey, string> = new Map();
   helpText = '';
 
+  hidden: boolean = false;
+
   constructor(id: string, fieldType: FieldType, helpText: string = '') {
     this.id = id; // TODO gehört eigentlich nur in InputElement. Sollte aus anderen Typen rausrefactored werden
     this.fieldType = fieldType;
@@ -22,9 +24,18 @@ export class UIElement implements UIElementOrBlock {
   }
 
   check(values: Record<string, string>): void {
+    this.hidden = false;
     if (values[this.id]) {
       this.value = values[this.id];
     }
+  }
+
+  getValues(): Record<string, string> {
+    return { };
+  }
+
+  hide(): void {
+    this.hidden = true;
   }
 
   getCopy(idSuffix = ''): UIElement {
@@ -51,6 +62,13 @@ export class InputElement extends UIElement {
     const copyElement = super.getCopy(idSuffix) as InputElement;
     copyElement.required = this.required;
     return copyElement;
+  }
+
+  getValues(): Record<string, string> {
+    if (this.hidden) {
+      return { };
+    }
+    return { [this.id]: this.value };
   }
 }
 
