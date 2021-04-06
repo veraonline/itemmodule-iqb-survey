@@ -7,7 +7,6 @@ import { IfThenElseBlock, RepeatBlock } from '../classes/UIBlock';
 import { FieldType } from '../classes/interfaces';
 
 @Directive()
-// tslint:disable-next-line:directive-class-suffix
 export abstract class ElementComponent {
   @Input() elementData: UIElement | RepeatBlock | IfThenElseBlock;
   @Input() parentForm: FormGroup;
@@ -24,10 +23,7 @@ export abstract class ElementComponent {
   }
 
   get value(): string {
-    if (this.elementData) { // TODO warum check? refactor?
-      return this.elementData.value;
-    }
-    return '';
+    return (this.elementData as InputElement).value;
   }
 
   get elementDataAsUIElement(): UIElement {
@@ -45,21 +41,21 @@ export abstract class ElementComponent {
   }
 
   get elementDataAsIfThenElseBlock(): IfThenElseBlock {
-    if (this.elementData && this.elementData instanceof IfThenElseBlock) {
+    if (this.elementIsIfThenElseBlock) {
       return this.elementData as IfThenElseBlock;
     }
     return null;
   }
 
   elementIsUIElement(): boolean {
-    return this.elementData && this.elementData instanceof UIElement;
+    return this.elementData instanceof UIElement;
   }
 
   elementIsRepeatBlock(): boolean {
-    return this.elementData && this.elementData instanceof RepeatBlock;
+    return this.elementData instanceof RepeatBlock;
   }
 
   elementIsIfThenElseBlock(): boolean {
-    return this.elementData && this.elementData instanceof IfThenElseBlock; // TODO why check?
+    return this.elementData instanceof IfThenElseBlock;
   }
 }

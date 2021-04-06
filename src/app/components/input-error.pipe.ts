@@ -12,10 +12,10 @@ export class InputErrorPipe implements PipeTransform {
     maxlength: 'zu lang'
   };
 
-  public transform(errors?: ValidationErrors, isCheckbox?: boolean): string {
+  transform(errors?: ValidationErrors, isCheckbox?: boolean): string {
     if (errors) {
       let returnMessage = '';
-      Object.keys(errors).forEach((errKey) => {
+      Object.keys(errors).forEach(errKey => {
         if (returnMessage) {
           returnMessage += '; ';
         } else {

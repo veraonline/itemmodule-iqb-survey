@@ -51,7 +51,7 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
   linesNumber = 1;
   numberInputControl = new FormControl();
   textInputControl = new FormControl();
-  valueChangeSubscription: Subscription = null;
+  valueChangeSubscription: Subscription;
 
   ngOnInit(): void {
     const elementData = this.elementData as InputElement;

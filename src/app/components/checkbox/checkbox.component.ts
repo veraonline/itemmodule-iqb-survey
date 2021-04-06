@@ -32,7 +32,7 @@ export class CheckboxComponent extends ElementComponent implements OnInit, OnDes
   postText = '';
   helpText = '';
   checkboxControl = new FormControl();
-  valueChangeSubscription: Subscription = null;
+  valueChangeSubscription: Subscription;
 
   ngOnInit(): void {
     const elementData = this.elementData as InputElement;

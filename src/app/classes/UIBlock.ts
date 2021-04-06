@@ -100,7 +100,6 @@ export class RepeatBlock extends UIBlock {
               newElement.value = values[newElement.id];
             }
           }
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
           if (newElement instanceof IfThenElseBlock) {
             this.affixIfBlockConditionVariable(newElement, i);
           }

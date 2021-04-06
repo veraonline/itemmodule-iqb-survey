@@ -47,7 +47,7 @@ export class SelectComponent extends ElementComponent implements OnInit, OnDestr
   helpText = '';
   options: string[] = [];
   selectInputControl = new FormControl();
-  valueChangeSubscription: Subscription = null;
+  valueChangeSubscription: Subscription;
 
   ngOnInit(): void {
     const elementData = this.elementData as InputElement;
