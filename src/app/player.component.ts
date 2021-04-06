@@ -3,12 +3,13 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { StartData } from './classes/interfaces';
-import { DataService } from './data.service';
+import { ParserService } from './parser.service';
+import { UIBlock } from './classes/UIBlock';
 
 @Component({
   template: `
     <form [formGroup]="form">
-      <div *ngFor="let element of dataService.rootBlock.elements" [style.margin]="'0px 30px'">
+      <div *ngFor="let element of rootBlock.elements" [style.margin]="'0px 30px'">
         <player-sub-form [elementData]="element" [parentForm]="form"
                          (elementDataChange)="formValueChanged()"
                          (navigationRequested)="this.navigationRequested.emit($event);">
@@ -23,9 +24,12 @@ export class PlayerComponent {
   @Output() navigationRequested = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
+  rootBlock: UIBlock = new UIBlock('0');
+  allValues = {};
+
   form = new FormGroup({});
 
-  constructor(public dataService: DataService) {}
+  constructor(public parserService: ParserService) { }
 
   @Input()
   set startData(startData: StartData) {
@@ -35,8 +39,8 @@ export class PlayerComponent {
           Object.keys(startData.unitState?.dataParts?.allResponses).length > 0) {
         storedResponses = JSON.parse(startData.unitState.dataParts.allResponses);
       }
-      this.dataService.setElements(startData.unitDefinition.split('\n'), storedResponses);
-      this.formValueChanged();
+      this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split('\n'));
+      this.rootBlock.check(storedResponses);
     } else {
       console.warn('player: (setStartData) no unitDefinition is given');
     }
