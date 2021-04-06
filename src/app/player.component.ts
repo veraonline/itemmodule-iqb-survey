@@ -4,14 +4,15 @@ import {
 import { FormGroup } from '@angular/forms';
 import { StartData } from './classes/interfaces';
 import { ParserService } from './parser.service';
-import { UIBlock } from './classes/UIBlock';
+import { RepeatBlock, UIBlock } from './classes/UIBlock';
+import { InputElement } from './classes/UIElement';
 
 @Component({
   template: `
     <form [formGroup]="form">
       <div *ngFor="let element of rootBlock.elements" [style.margin]="'0px 30px'">
         <player-sub-form [elementData]="element" [parentForm]="form"
-                         (elementDataChange)="formValueChanged()"
+                         (elementDataChange)="formValueChanged($event)"
                          (navigationRequested)="this.navigationRequested.emit($event);">
         </player-sub-form>
       </div>
@@ -50,9 +51,10 @@ export class PlayerComponent {
     this.form.markAllAsTouched();
   }
 
-  formValueChanged(): void {
-    const allValues = this.dataService.getValues();
-    this.dataService.rootBlock.check(allValues);
-    this.valueChanged.emit(JSON.stringify(allValues));
+  formValueChanged(event: InputElement | RepeatBlock): void {
+    this.rootBlock.check({ ...this.allValues, [event.id]: event.value });
+    this.allValues = this.rootBlock.getValues();
+    console.log('allValues: ', this.allValues);
+    this.valueChanged.emit(JSON.stringify(this.allValues));
   }
 }
