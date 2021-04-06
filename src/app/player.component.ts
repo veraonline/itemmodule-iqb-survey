@@ -24,7 +24,7 @@ export class PlayerComponent {
   @Output() navigationRequested = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
-  rootBlock: UIBlock = new UIBlock('0');
+  rootBlock: UIBlock = new UIBlock();
   allValues = {};
 
   form = new FormGroup({});

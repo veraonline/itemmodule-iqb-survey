@@ -1,27 +1,21 @@
 // eslint-disable-next-line max-classes-per-file
-import { UIElement, UIElementOrBlock } from './UIElement';
+import { InputElement, UIElement, UIElementOrBlock } from './UIElement';
 import { PropertyKey } from './interfaces';
 
 export class UIBlock implements UIElementOrBlock {
-  id = '';
-  value = null;
   elements: (UIElement | UIBlock)[] = [];
   hidden: boolean = false;
-
-  constructor(id: string) {
-    this.id = id;
-  }
 
   getValues(): Record<string, string> {
     let values = {};
     this.elements.forEach(element => {
       values = { ...values, ...element.getValues() };
     });
-    return { ...values, [this.id]: this.value };
+    return { ...values };
   }
 
   getCopy(idSuffix = ''): UIBlock {
-    const copy = new UIBlock(this.id);
+    const copy = new UIBlock();
     this.elements.forEach(e => {
       copy.elements.push(e.getCopy(idSuffix));
     });
@@ -41,14 +35,17 @@ export class UIBlock implements UIElementOrBlock {
 }
 
 export class RepeatBlock extends UIBlock {
+  id: string;
+  value: string;
   properties: Map<PropertyKey, string> = new Map();
   templateElements: (UIElement | UIBlock)[] = [];
   helpText = '';
-  localIDs = []; // array of IDs int he RepeatBlock, so IfBlocks can adjust their cond var
+  localIDs = []; // array of IDs in the RepeatBlock, so IfBlocks can adjust their condition var
 
   constructor(id: string, textBefore:string = '', textAfter:string = '', maxBlocks: string = '',
               helpText: string = '') {
-    super(id);
+    super();
+    this.id = id;
     this.helpText = helpText;
     if (textBefore) this.properties.set(PropertyKey.TEXT, textBefore);
     if (textAfter) this.properties.set(PropertyKey.TEXT2, textAfter);
@@ -91,10 +88,10 @@ export class RepeatBlock extends UIBlock {
       if (i < oldSubBlockNumber) {
         newBlocks.push(this.elements[i]);
       } else {
-        const newBlock = new UIBlock(this.id);
+        const newBlock = new UIBlock();
         this.templateElements.forEach(templateElement => {
           const newElement = templateElement.getCopy(`_${(i + 1).toString()}`);
-          if (newElement instanceof UIElement) {
+          if (newElement instanceof InputElement) {
             this.localIDs.push(newElement.id.substr(0, newElement.id.length - 2)); // cut away the new affix
             if (values[newElement.id]) {
               newElement.value = values[newElement.id];
@@ -111,7 +108,7 @@ export class RepeatBlock extends UIBlock {
     this.elements = newBlocks;
   }
 
-  affixIfBlockConditionVariable(newElement: IfThenElseBlock, index: number) {
+  affixIfBlockConditionVariable(newElement: IfThenElseBlock, index: number): void {
     if (this.localIDs.includes(newElement.conditionVariableName)) {
       newElement.conditionVariableName += `_${(index + 1).toString()}`;
     }
@@ -136,15 +133,14 @@ export class IfThenElseBlock extends UIBlock {
   trueElements: (UIElement | UIBlock)[] = [];
   falseElements: (UIElement | UIBlock)[] = [];
 
-  constructor(id: string, conditionVariableName: string, conditionTrueValue: string) {
-    super(id);
+  constructor(conditionVariableName: string, conditionTrueValue: string) {
+    super();
     this.conditionVariableName = conditionVariableName;
     this.conditionTrueValue = conditionTrueValue;
   }
 
   getCopy(idSuffix = ''): IfThenElseBlock {
-    const copy = new IfThenElseBlock(this.id + idSuffix,
-      this.conditionVariableName,
+    const copy = new IfThenElseBlock(this.conditionVariableName,
       this.conditionTrueValue);
     this.trueElements.forEach(e => {
       copy.trueElements.push(e.getCopy(idSuffix));
@@ -152,13 +148,11 @@ export class IfThenElseBlock extends UIBlock {
     this.falseElements.forEach(e => {
       copy.falseElements.push(e.getCopy(idSuffix));
     });
-    copy.value = this.value;
     return copy;
   }
 
   check(values: Record<string, string>): void {
     if (String(values[this.conditionVariableName]) === this.conditionTrueValue) {
-      this.value = 'true';
       this.elements = this.trueElements;
       this.falseElements.forEach(e => {
         e.hide();
@@ -167,7 +161,6 @@ export class IfThenElseBlock extends UIBlock {
         e.check(values);
       });
     } else {
-      this.value = 'false';
       this.elements = this.falseElements;
       this.trueElements.forEach(e => {
         e.hide();
@@ -176,13 +169,5 @@ export class IfThenElseBlock extends UIBlock {
         e.check(values);
       });
     }
-  }
-
-  getValues(): Record<string, string> {
-    let values = {};
-    this.elements.forEach(element => {
-      values = { ...values, ...element.getValues() };
-    });
-    return { ...values };
   }
 }

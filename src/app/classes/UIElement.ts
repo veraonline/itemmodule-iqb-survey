@@ -6,18 +6,56 @@ export interface UIElementOrBlock {
 }
 
 export class UIElement implements UIElementOrBlock {
-  id = '';
   fieldType: FieldType;
-  value = null;
   properties: Map<PropertyKey, string> = new Map();
   helpText = '';
 
   hidden: boolean = false;
 
-  constructor(id: string, fieldType: FieldType, helpText: string = '') {
-    this.id = id; // TODO gehört eigentlich nur in InputElement. Sollte aus anderen Typen rausrefactored werden
+  constructor(fieldType: FieldType, helpText: string = '') {
     this.fieldType = fieldType;
     this.helpText = helpText;
+  }
+
+  /** Since basic elements have no value, nothing needs to be checked */
+  // eslint-disable-next-line class-methods-use-this,@typescript-eslint/no-unused-vars
+  check(values: Record<string, string>): void {
+  }
+
+  /** Since basic elements have no value, this does nothing */
+  // eslint-disable-next-line class-methods-use-this
+  getValues(): Record<string, string> {
+    return { };
+  }
+
+  hide(): void {
+    this.hidden = true;
+  }
+
+  getCopy(idSuffix = ''): UIElement {
+    let copy;
+    if (this instanceof InputElement) {
+      copy = new InputElement(this.id + idSuffix, this.fieldType, this.required, this.helpText);
+    } else {
+      copy = new UIElement(this.fieldType, this.helpText);
+    }
+    this.properties.forEach((value, key) => {
+      copy.properties.set(key, value);
+    });
+    copy.helpText = this.helpText;
+    return copy;
+  }
+}
+
+export class InputElement extends UIElement {
+  id: string;
+  value: string;
+  required = false;
+
+  constructor(id: string, fieldType: FieldType, required: boolean, helpText: string) {
+    super(fieldType, helpText);
+    this.id = id;
+    this.required = required;
   }
 
   check(values: Record<string, string>): void {
@@ -28,48 +66,23 @@ export class UIElement implements UIElementOrBlock {
   }
 
   getValues(): Record<string, string> {
-    return { };
-  }
-
-  hide(): void {
-    this.hidden = true;
-  }
-
-  getCopy(idSuffix = ''): UIElement {
-    const copy = new UIElement(this.id + idSuffix, this.fieldType, this.helpText);
-    this.properties.forEach((value, key) => {
-      copy.properties.set(key, value);
-    });
-    copy.helpText = this.helpText;
-    copy.value = this.value;
-    return copy;
-  }
-}
-
-export class InputElement extends UIElement {
-  required = false;
-  constructor(id: string, fieldType: FieldType, required: boolean, helpText: string) {
-    super(id, fieldType, helpText);
-    this.required = required;
-  }
-
-  getCopy(idSuffix = ''): InputElement {
-    const copyElement = super.getCopy(idSuffix) as InputElement;
-    copyElement.required = this.required;
-    return copyElement;
-  }
-
-  getValues(): Record<string, string> {
     if (this.hidden) {
       return { };
     }
     return { [this.id]: this.value };
   }
+
+  getCopy(idSuffix = ''): InputElement {
+    const copyElement = super.getCopy(idSuffix) as InputElement;
+    copyElement.value = this.value;
+    copyElement.required = this.required;
+    return copyElement;
+  }
 }
 
 export class TextElement extends UIElement {
-  constructor(id: string, fieldType = FieldType.TEXT, text: string, helpText: string) {
-    super(id, fieldType, helpText);
+  constructor(fieldType = FieldType.TEXT, text: string, helpText: string) {
+    super(fieldType, helpText);
     this.properties.set(PropertyKey.TEXT, text);
   }
 }
@@ -126,14 +139,14 @@ export class DropDownElement extends InputElement {
 
 export class NavButtonGroupElement extends UIElement {
   constructor(options: string) {
-    super('0', FieldType.NAV_BUTTON_GROUP);
+    super(FieldType.NAV_BUTTON_GROUP);
     if (options) this.properties.set(PropertyKey.TEXT2, options);
   }
 }
 
 export class ErrorElement extends UIElement {
-  constructor(id: string, errorText: string) {
-    super(id, FieldType.SCRIPT_ERROR);
+  constructor(errorText: string) {
+    super(FieldType.SCRIPT_ERROR);
     this.properties.set(PropertyKey.TEXT, errorText);
   }
 }

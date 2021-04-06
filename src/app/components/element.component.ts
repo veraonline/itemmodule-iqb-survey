@@ -2,7 +2,7 @@ import {
   Directive, Input, EventEmitter, Output
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { UIElement } from '../classes/UIElement';
+import { InputElement, UIElement } from '../classes/UIElement';
 import { IfThenElseBlock, RepeatBlock } from '../classes/UIBlock';
 import { FieldType } from '../classes/interfaces';
 
@@ -15,11 +15,9 @@ export abstract class ElementComponent {
   fieldType = FieldType;
 
   set value(value: string) {
-    if (this.elementData) { // TODO warum check? refactor?
-      this.elementData.value = value;
-      this.elementDataChange.emit(this.elementData);
-      this.valueChange.emit(value);
-    }
+    (this.elementData as InputElement).value = value;
+    this.elementDataChange.emit(this.elementData);
+    this.valueChange.emit(value);
   }
 
   get value(): string {

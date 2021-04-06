@@ -27,7 +27,7 @@ export class ParserService {
   }
 
   parseUnitDefinition(scriptLines: string[]): UIBlock {
-    this.rootBlock = new UIBlock('0');
+    this.rootBlock = new UIBlock();
     const errorMessage = ParserService.checkScriptHeader(scriptLines[0]);
     if (errorMessage !== '') {
       this.rootBlock.elements.push(ParserService.createErrorElement(errorMessage));
@@ -97,11 +97,11 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     this.scriptLines.forEach(line => {
       let elementToAdd: UIElement | UIBlock = null;
       if (line.trim() === '') {
-        elementToAdd = new UIElement('0', FieldType.TEXT);
+        elementToAdd = new UIElement(FieldType.TEXT);
       } else if (ParserService.getKeyword(line) === 'rem') {
         return;
       } else if (ParserService.getKeyword(line) === 'if-start') { // createIfBlock and add to stack
-        const ifElseBlock = ParserService.createIfElseBlock(line, this.idCounter);
+        const ifElseBlock = ParserService.createIfElseBlock(line);
 
         if (ifElseBlock instanceof UIElement) { // error case
           elementToAdd = ifElseBlock;
@@ -154,11 +154,9 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
       case 'header': // falls through
       case 'title': // falls through
       case 'html':
-        return ParserService.createTextElement(line, id);
+        return ParserService.createTextElement(line);
       case 'hr':
-        return new UIElement('0', FieldType.HR);
-      case 'rem': // TODO remove
-        return new UIElement('0', FieldType.TEXT);
+        return new UIElement(FieldType.HR);
       case 'input-text':
         return ParserService.createTextInputElement(line, id);
       case 'input-number':
@@ -170,21 +168,21 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
       case 'drop-down':
         return ParserService.createDropDownElement(line, id);
       case 'nav-button-group':
-        return ParserService.createNavButtonGroupElement(line, id);
+        return ParserService.createNavButtonGroupElement(line);
       default:
         return ParserService.createErrorElement(`Scriptfehler - Schlüsselwort nicht erkannt: "${line}"`);
     }
   }
 
-  private static createTextElement(line, id): UIElement {
+  private static createTextElement(line): UIElement {
     const textParam = this.getParameter(line, 1);
     if (!textParam) {
-      return new UIElement('0', FieldType.TEXT);
+      return new UIElement(FieldType.TEXT);
     }
 
     const capitalizedKeyword = this.getKeyword(line).toUpperCase().replace(/[-]/g, '_');
     const fieldType = FieldType[capitalizedKeyword];
-    return new TextElement(id, fieldType, textParam, this.getHelpText(line));
+    return new TextElement(fieldType, textParam, this.getHelpText(line));
   }
 
   private static createTextInputElement(line, id): UIElement {
@@ -258,7 +256,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     return new DropDownElement(id, variableParam, required, textBefore, textAfter, this.getHelpText(line));
   }
 
-  private static createNavButtonGroupElement(line, id): UIElement {
+  private static createNavButtonGroupElement(line): UIElement {
     const options = this.getParameter(line, 1);
     const optionList = options.split('##');
     if (optionList.length < 1 || (optionList.length === 1 && optionList[0] === '')) {
@@ -277,10 +275,10 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   }
 
   private static createErrorElement(errorText: string): UIElement {
-    return new ErrorElement('0', errorText);
+    return new ErrorElement(errorText);
   }
 
-  private static createIfElseBlock(line, id): UIElement | UIBlock {
+  private static createIfElseBlock(line): UIElement | UIBlock {
     const variableParam = ParserService.getParameter(line, 1);
     const valueParam = ParserService.getParameter(line, 2);
     if (!variableParam || !valueParam) {
@@ -288,7 +286,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
         `Scriptfehler - Parameter fehlt: "${line}"`
       );
     }
-    return new IfThenElseBlock(id.toString(), variableParam, valueParam);
+    return new IfThenElseBlock(variableParam, valueParam);
   }
 
   private static createRepeatBlock(line): UIElement | RepeatBlock {
