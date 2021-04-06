@@ -41,9 +41,7 @@ export class UIElement implements UIElementOrBlock {
       copy.properties.set(key, value);
     });
     copy.helpText = this.helpText;
-    if (idSuffix.length === 0) {
-      copy.value = this.value;
-    }
+    copy.value = this.value;
     return copy;
   }
 }
