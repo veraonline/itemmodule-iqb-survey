@@ -4,7 +4,7 @@ import { PropertyKey } from './interfaces';
 
 export class UIBlock implements UIElementOrBlock {
   id = '';
-  value = '';
+  value = null;
   elements: (UIElement | UIBlock)[] = [];
   hidden: boolean = false;
 

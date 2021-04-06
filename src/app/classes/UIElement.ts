@@ -11,7 +11,7 @@ export class UIElementOrBlock {
 export class UIElement implements UIElementOrBlock {
   id = '';
   fieldType: FieldType;
-  value = '';
+  value = null;
   properties: Map<PropertyKey, string> = new Map();
   helpText = '';
 
