@@ -1,11 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import { FieldType, PropertyKey } from './interfaces';
 
-export class UIElementOrBlock {
-  getCopy(): UIElementOrBlock {
-    console.error(`${typeof this}: Missing overload for getCopy()!`);
-    return null;
-  }
+export interface UIElementOrBlock {
+  getCopy(): UIElementOrBlock;
 }
 
 export class UIElement implements UIElementOrBlock {
