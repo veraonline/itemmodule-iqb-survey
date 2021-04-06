@@ -55,10 +55,10 @@ export class ParserService {
     if (!versionNumbers || versionNumbers.length < 2) {
       return 'Scriptfehler: Version-Parameter Fehlerhaft!';
     }
-    return ParserService.checkVersion(Number(versionNumbers[0]), Number(versionNumbers[1]));
+    return ParserService.checkMajorVersion(Number(versionNumbers[0]));
   }
 
-  private static checkVersion(majorVersion: number, minorVersion: number): string {
+  private static checkMajorVersion(majorVersion: number): string {
     const supportedMajorVersions = environment.supportedScriptMajorVersions;
     if (!supportedMajorVersions.includes(majorVersion)) {
       return `Scriptfehler: Scriptversion nicht unterstützt (erste Zeile)!\
