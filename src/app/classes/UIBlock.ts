@@ -66,6 +66,7 @@ export class RepeatBlock extends UIBlock {
   }
 
   check(values: Record<string, string>): void {
+    this.hidden = false;
     if (values[this.id]) {
       this.value = values[this.id];
     }
@@ -74,6 +75,9 @@ export class RepeatBlock extends UIBlock {
   }
 
   getValues(): Record<string, string> {
+    if (this.hidden || !this.value) {
+      return { };
+    }
     let values = {};
     this.elements.forEach(element => {
       values = { ...values, ...element.getValues() };

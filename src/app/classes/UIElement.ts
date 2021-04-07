@@ -66,7 +66,7 @@ export class InputElement extends UIElement {
   }
 
   getValues(): Record<string, string> {
-    if (this.hidden) {
+    if (this.hidden || !this.value) {
       return { };
     }
     return { [this.id]: this.value };
