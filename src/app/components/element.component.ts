@@ -3,14 +3,14 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { InputElement, UIElement } from '../classes/UIElement';
-import { IfThenElseBlock, RepeatBlock } from '../classes/UIBlock';
+import { IfThenElseBlock, LikertBlock, RepeatBlock } from '../classes/UIBlock';
 import { FieldType } from '../classes/interfaces';
 
 @Directive()
 export abstract class ElementComponent {
-  @Input() elementData: UIElement | RepeatBlock | IfThenElseBlock;
+  @Input() elementData: UIElement | RepeatBlock | LikertBlock | IfThenElseBlock;
   @Input() parentForm: FormGroup;
-  @Output() elementDataChange = new EventEmitter<UIElement | RepeatBlock | IfThenElseBlock>();
+  @Output() elementDataChange = new EventEmitter<UIElement | RepeatBlock | LikertBlock | IfThenElseBlock>();
   @Output() valueChange = new EventEmitter<string>();
   fieldType = FieldType;
 
@@ -38,6 +38,13 @@ export abstract class ElementComponent {
     return null;
   }
 
+  get elementDataAsLikertBlock(): LikertBlock {
+    if (this.elementIsLikertBlock) {
+      return this.elementData as LikertBlock;
+    }
+    return null;
+  }
+
   get elementDataAsIfThenElseBlock(): IfThenElseBlock {
     if (this.elementIsIfThenElseBlock) {
       return this.elementData as IfThenElseBlock;
@@ -51,6 +58,10 @@ export abstract class ElementComponent {
 
   elementIsRepeatBlock(): boolean {
     return this.elementData instanceof RepeatBlock;
+  }
+
+  elementIsLikertBlock(): boolean {
+    return this.elementData instanceof LikertBlock;
   }
 
   elementIsIfThenElseBlock(): boolean {

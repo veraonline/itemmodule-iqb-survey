@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { IfThenElseBlock, RepeatBlock, UIBlock } from './classes/UIBlock';
+import {
+  IfThenElseBlock, RepeatBlock, UIBlock, LikertBlock
+} from './classes/UIBlock';
 import { FieldType, NavButtonOptions } from './classes/interfaces';
 import {
-  CheckboxElement, DropDownElement, ErrorElement,
+  CheckboxElement, DropDownElement, ErrorElement, LikertElement,
   MultiChoiceElement, NavButtonGroupElement, NumberInputElement, TextElement,
   TextInputElement, UIElement
 } from './classes/UIElement';
@@ -101,6 +103,16 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
         elementToAdd = new UIElement(FieldType.TEXT);
       } else if (ParserService.getKeyword(line) === 'rem') {
         return;
+      } else if (ParserService.getKeyword(line) === 'likert-start') {
+        const likertBlockElement = ParserService.createLikertBlock(line);
+        if (likertBlockElement instanceof UIElement) {
+          elementToAdd = likertBlockElement;
+        } else {
+          this.openBlocks.push(likertBlockElement);
+        }
+      } else if (ParserService.getKeyword(line) === 'likert-end') {
+        elementToAdd =
+          this.openBlocks.pop() as LikertBlock;
       } else if (ParserService.getKeyword(line) === 'if-start') { // createIfBlock and add to stack
         const ifElseBlock = ParserService.createIfElseBlock(line);
 
@@ -136,6 +148,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
           const latestBlock = this.openBlocks[this.openBlocks.length - 1];
           if (latestBlock instanceof RepeatBlock) {
             latestBlock.templateElements.push(elementToAdd);
+          } else if (latestBlock instanceof LikertBlock) {
+            latestBlock.elements.push(elementToAdd as LikertElement);
           } else if (latestBlock.isTrueBranch) {
             (latestBlock.uiBlock as IfThenElseBlock).trueElements.push(elementToAdd);
           } else {
@@ -170,6 +184,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
         return ParserService.createDropDownElement(line, id);
       case 'nav-button-group':
         return ParserService.createNavButtonGroupElement(line);
+      case 'likert':
+        return ParserService.createLikertElement(line);
       default:
         return ParserService.createErrorElement(`Scriptfehler - Schlüsselwort nicht erkannt: "${line}"`);
     }
@@ -255,6 +271,28 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     const textBefore = this.getParameter(line, 3);
     const textAfter = this.getParameter(line, 4);
     return new DropDownElement(id, variableParam, required, textBefore, textAfter, this.getHelpText(line));
+  }
+
+  private static createLikertBlock(line: string): UIElement | LikertBlock {
+    const headerList = this.getParameter(line, 1).split('##');
+    if (headerList.length < 1 || (headerList.length === 1 && headerList[0] === '')) {
+      return ParserService.createErrorElement(
+        `Scriptfehler - Parameter fehlt: "${line}"`
+      );
+    }
+    return new LikertBlock(headerList);
+  }
+
+  private static createLikertElement(line: string): UIElement {
+    const id = this.getParameter(line, 0).trim();
+    const text = this.getParameter(line, 1);
+    if (!id || !text) {
+      return ParserService.createErrorElement(
+        `Scriptfehler - Parameter fehlt: "${line}"`
+      );
+    }
+
+    return new LikertElement(id, text, false, 'HelptextLIkert');
   }
 
   private static createNavButtonGroupElement(line): UIElement {

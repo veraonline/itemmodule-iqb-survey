@@ -31,6 +31,8 @@ import { ElementComponent } from '../element.component';
     </ng-container>
     <player-repeat *ngIf="elementIsRepeatBlock()" [elementData]="elementData"
                    (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm"></player-repeat>
+    <player-likert *ngIf="elementIsLikertBlock()" [elementData]="elementData"
+                   (elementDataChange)="elementDataChange.emit($event)" [parentForm]="parentForm"></player-likert>
     <div *ngIf="elementIsIfThenElseBlock()">
       <div *ngFor="let e of elementData.elements">
         <player-sub-form [elementData]="e" [parentForm]="parentForm"
