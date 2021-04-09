@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 
+// TODO move components into component dir. no reason to have sub dirs with one file
 import { SubFormComponent } from './components/sub-form/sub-form.component';
 import { RepeatComponent } from './components/repeat/repeat.component';
 import { InputErrorPipe } from './components/input-error.pipe';

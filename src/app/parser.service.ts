@@ -19,7 +19,8 @@ export class ParserService {
   private scriptLines: string[] = [];
   private _idCounter = 0;
 
-  private latestBlock: Array<IfElementCompoundObject | RepeatBlock> = []; // add parsed elements to last opened block
+  // add parsed elements to last opened block
+  private openBlocks: Array<IfElementCompoundObject | RepeatBlock | LikertBlock> = [];
 
   get idCounter(): string {
     this._idCounter += 1;
@@ -106,33 +107,33 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
         if (ifElseBlock instanceof UIElement) { // error case
           elementToAdd = ifElseBlock;
         } else {
-          this.latestBlock.push({
+          this.openBlocks.push({
             isTrueBranch: true,
             uiBlock: ifElseBlock
           });
         }
       } else if (ParserService.getKeyword(line) === 'if-else') { // switch to true branch of last object
-        (this.latestBlock[this.latestBlock.length - 1] as Record<IfStackObjectKey, UIBlock | boolean>).isTrueBranch =
+        (this.openBlocks[this.openBlocks.length - 1] as Record<IfStackObjectKey, UIBlock | boolean>).isTrueBranch =
           false;
       } else if (ParserService.getKeyword(line) === 'if-end') { // remove last object and mark for adding
         elementToAdd =
-          (this.latestBlock.pop() as Record<IfStackObjectKey, UIBlock | boolean>).uiBlock as unknown as UIBlock;
+          (this.openBlocks.pop() as Record<IfStackObjectKey, UIBlock | boolean>).uiBlock as unknown as UIBlock;
       } else if (ParserService.getKeyword(line) === 'repeat-start') {
         const repeatBlockElement = ParserService.createRepeatBlock(line);
         if (repeatBlockElement instanceof UIElement) {
           elementToAdd = repeatBlockElement;
         } else {
-          this.latestBlock.push(repeatBlockElement);
+          this.openBlocks.push(repeatBlockElement);
         }
       } else if (ParserService.getKeyword(line) === 'repeat-end') {
-        elementToAdd = this.latestBlock.pop() as RepeatBlock;
+        elementToAdd = this.openBlocks.pop() as RepeatBlock;
       } else {
         elementToAdd = ParserService.parseElement(line, this.idCounter);
       }
 
       if (elementToAdd) {
-        if (this.latestBlock.length > 0) {
-          const latestBlock = this.latestBlock[this.latestBlock.length - 1];
+        if (this.openBlocks.length > 0) {
+          const latestBlock = this.openBlocks[this.openBlocks.length - 1];
           if (latestBlock instanceof RepeatBlock) {
             latestBlock.templateElements.push(elementToAdd);
           } else if (latestBlock.isTrueBranch) {
@@ -230,7 +231,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
     return new CheckboxElement(id, variableParam, required, textBefore, textAfter, this.getHelpText(line));
   }
 
-  private static createMultiChoiceElement(line: string, id: string) {
+  private static createMultiChoiceElement(line: string, id: string): UIElement {
     const variableParam = this.getParameter(line, 1);
     if (!variableParam) {
       return ParserService.createErrorElement(

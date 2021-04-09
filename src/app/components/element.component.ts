@@ -17,7 +17,7 @@ export abstract class ElementComponent {
   set value(value: string) {
     (this.elementData as InputElement).value = value;
     this.elementDataChange.emit(this.elementData);
-    this.valueChange.emit(value);
+    this.valueChange.emit(value); // TODO not used?!
   }
 
   get value(): string {

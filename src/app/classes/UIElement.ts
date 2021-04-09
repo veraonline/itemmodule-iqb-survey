@@ -7,7 +7,7 @@ export interface UIElementOrBlock {
 
 export class UIElement implements UIElementOrBlock {
   fieldType: FieldType;
-  properties: Map<PropertyKey, string> = new Map();
+  properties: Map<PropertyKey, string> = new Map(); // TODO better refactor as actual object props
   helpText = '';
 
   hidden: boolean = false;
@@ -47,7 +47,7 @@ export class UIElement implements UIElementOrBlock {
   }
 }
 
-export class InputElement extends UIElement {
+export class InputElement extends UIElement { // TODO needs to be abstract
   id: string;
   value: string;
   required = false;
