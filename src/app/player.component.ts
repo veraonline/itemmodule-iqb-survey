@@ -25,15 +25,23 @@ export class PlayerComponent {
   @Output() navigationRequested = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
-  rootBlock: UIBlock = new UIBlock();
-  allValues = {};
+  rootBlock: UIBlock;
+  allValues: Record<string, string>;
+  form: FormGroup;
 
-  form = new FormGroup({});
+  constructor(public parserService: ParserService) {
+    this.initFields();
+  }
 
-  constructor(public parserService: ParserService) { }
+  initFields(): void {
+    this.rootBlock = new UIBlock();
+    this.allValues = {};
+    this.form = new FormGroup({});
+  }
 
   @Input()
   set startData(startData: StartData) {
+    this.initFields();
     if (startData.unitDefinition) {
       let storedResponses = {};
       if (startData.unitState?.dataParts?.allResponses &&
