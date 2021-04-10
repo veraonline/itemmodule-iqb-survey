@@ -35,9 +35,9 @@ import { LikertBlock } from '../classes/UIBlock';
     </div>
   `,
   styles: [
-    '.mat-radio-label {flex-direction: column;}',
-    '#elements:nth-child(even) {background-color: #F5F5F5;}',
-    '#elements:nth-child(odd) {background-color: lightgrey;}',
+    'player-likert .mat-radio-label {flex-direction: column;}',
+    'player-likert #elements:nth-child(even) {background-color: #F5F5F5;}',
+    'player-likert #elements:nth-child(odd) {background-color: lightgrey;}',
     'player-likert {margin: 20px 5px}'
   ],
   encapsulation: ViewEncapsulation.None
