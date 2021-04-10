@@ -20,7 +20,7 @@ export class ParserService {
   private _idCounter = 0;
 
   // add parsed elements to last opened block
-  private openBlocks: Array<IfElementCompoundObject | RepeatBlock | LikertBlock> = [];
+  private openBlocks: Array<IfElementCompoundObject | RepeatBlock> = [];
 
   get idCounter(): string {
     this._idCounter += 1;
