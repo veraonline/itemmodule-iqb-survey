@@ -9,36 +9,39 @@ import { LikertBlock } from '../classes/UIBlock';
 @Component({
   selector: 'player-likert',
   template: `
-    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
-      <div>
-        <div id="header" fxFlexOffset="25" fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-          <div fxFlex fxLayoutAlign="center center"
-               *ngFor="let header of elementDataAsLikertBlock.headerList">
-            <mat-card>{{ header }}</mat-card>
+    <mat-card fxLayout="column" fxLayoutAlign="start stretch">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex="40">&nbsp;</div>
+        <div fxFlex="60" fxLayout="row" fxLayoutAlign="space-around center">
+          <div *ngFor="let header of elementDataAsLikertBlock.headerList"
+               fxFlex fxLayout="row" fxLayoutAlign="center center">{{ header }}</div>
+        </div>
+      </div>
+      <mat-card-content fxLayout="column" fxLayoutAlign="start stretch">
+        <div *ngFor="let element of elementDataAsLikertBlock.elements"
+             [formGroup]="parentForm" fxLayout="column" class="likert-row" >
+          <div *ngIf="element.fieldType == fieldType.SCRIPT_ERROR">
+            {{element.errorText}}
+          </div>
+          <div *ngIf="element.fieldType !== fieldType.SCRIPT_ERROR" fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxFlex="40">{{element.text}}</div>
+            <mat-radio-group [formControlName]="element.id" fxFlex="60"
+                             fxLayout="row" fxLayoutAlign="space-around center">
+              <mat-radio-button fxFlex [value]="header"
+                                *ngFor="let header of elementDataAsLikertBlock.headerList;let i=index;"
+                                [formControlName]="element.id" ngDefaultControl>
+              </mat-radio-button>
+            </mat-radio-group>
           </div>
         </div>
-      </div>
-      <div id="elements" *ngFor="let element of elementDataAsLikertBlock.elements" [formGroup]="parentForm">
-        <div *ngIf="element.fieldType == fieldType.SCRIPT_ERROR">
-          {{element.errorText}}
-        </div>
-        <div *ngIf="element.fieldType !== fieldType.SCRIPT_ERROR">
-          <div fxFlex="25">{{element.text}}</div>
-          <mat-radio-group [formControlName]="element.id" fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-radio-button fxFlex [value]="header"
-                              *ngFor="let header of elementDataAsLikertBlock.headerList;let i=index;"
-                              [formControlName]="element.id" ngDefaultControl>
-            </mat-radio-button>
-          </mat-radio-group>
-        </div>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   `,
   styles: [
-    'player-likert .mat-radio-label {flex-direction: column;}',
-    'player-likert #elements:nth-child(even) {background-color: #F5F5F5;}',
-    'player-likert #elements:nth-child(odd) {background-color: lightgrey;}',
-    'player-likert {margin: 20px 5px}'
+    '.mat-radio-label {flex-direction: row; place-content: center center}',
+    '.likert-row:nth-child(even) {background-color: #F5F5F5;}',
+    '.likert-row:nth-child(odd) {background-color: lightgrey;}',
+    '.likert-row {padding: 4px}'
   ],
   encapsulation: ViewEncapsulation.None
 })
