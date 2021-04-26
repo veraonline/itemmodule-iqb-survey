@@ -284,8 +284,8 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
   }
 
   private static createLikertElement(line: string): UIElement {
-    const id = this.getParameter(line, 0).trim();
-    const text = this.getParameter(line, 1);
+    const id = this.getParameter(line, 1).trim();
+    const text = this.getParameter(line, 2);
     if (!id || !text) {
       return ParserService.createErrorElement(
         `Scriptfehler - Parameter fehlt: "${line}"`

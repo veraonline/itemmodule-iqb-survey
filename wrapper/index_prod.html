@@ -13,6 +13,36 @@
         data-supported-unit-state-data-types="iqb-key-value@1.0.0"
         data-supported-browsers='{"Firefox": 69, "Chrome": 72, "Edge": 79}'
   />
+  <script type="application/ld+json">
+    {
+      "@context": "https://w3id.org/iqb/verona-modules",
+      "@type": "player",
+      "@id": "iqb-player-abi",
+      "name": {
+        "de": "IQB-Player für Skripte (Abi)",
+        "en": "IQB player for script language"
+      },
+      "maintainer": {
+        "name": {
+          "de": "IQB - Institut zur Qualitätsentwicklung im Bildungswesen",
+          "en": "IQB - Institute for Educational Quality Improvement"
+        },
+        "url": "https://www.iqb.hu-berlin.de",
+        "email": "iqb-tbadev@hu-berlin.de"
+      },
+      "description": {
+        "de": "Dieser Player interpretiert eine Script-Sprache, die speziell für die effiziente Erstellung umfangreicher Befragungen entwickelt wurde. Über die gängigen Frageformate hinaus werden bedingte Formularblöcke, dynamische Wiederholungen von Blöcken und Likert-skalen unterstützt.",
+        "en": "You can use this Verona Player for surveys where you need a large number of questions. By interpreting it's own script language, the player just need one line per control definition. You can setup conditional blocks, repeating blocks or likert scale tables."
+      },
+      "version": "3.4.0",
+      "apiVersion": "2.0",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/iqb-berlin/verona-player-abi"
+      },
+      "notSupportedFeatures": []
+    }
+  </script>
   <link rel="stylesheet" href="verona-player-abi.css">
 </head>
 <body>
