@@ -20,7 +20,8 @@ export enum FieldType {
   DROP_DOWN,
   REPEAT_CONTROL,
   SCRIPT_ERROR,
-  NAV_BUTTON_GROUP
+  NAV_BUTTON_GROUP,
+  LIKERT_ELEMENT
 }
 
 export interface KeyValuePairString {

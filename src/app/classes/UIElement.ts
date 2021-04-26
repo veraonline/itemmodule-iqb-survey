@@ -137,6 +137,14 @@ export class DropDownElement extends InputElement {
   }
 }
 
+export class LikertElement extends InputElement {
+  text: string;
+  constructor(id: string, text: string, required: boolean, helpText: string) {
+    super(id, FieldType.LIKERT_ELEMENT, required, helpText);
+    this.text = text;
+  }
+}
+
 export class NavButtonGroupElement extends UIElement {
   constructor(options: string) {
     super(FieldType.NAV_BUTTON_GROUP);
@@ -145,8 +153,10 @@ export class NavButtonGroupElement extends UIElement {
 }
 
 export class ErrorElement extends UIElement {
+  errorText: string;
   constructor(errorText: string) {
     super(FieldType.SCRIPT_ERROR);
     this.properties.set(PropertyKey.TEXT, errorText);
+    this.errorText = errorText;
   }
 }

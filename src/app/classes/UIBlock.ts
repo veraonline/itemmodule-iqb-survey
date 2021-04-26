@@ -1,5 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
-import { InputElement, UIElement, UIElementOrBlock } from './UIElement';
+import {
+  InputElement, LikertElement, UIElement, UIElementOrBlock
+} from './UIElement';
 import { PropertyKey } from './interfaces';
 
 export class UIBlock implements UIElementOrBlock {
@@ -173,5 +175,15 @@ export class IfThenElseBlock extends UIBlock {
         e.check(values);
       });
     }
+  }
+}
+
+export class LikertBlock extends UIBlock {
+  headerList: string[];
+  elements: (LikertElement)[] = [];
+
+  constructor(headerList: string[]) {
+    super();
+    this.headerList = headerList;
   }
 }

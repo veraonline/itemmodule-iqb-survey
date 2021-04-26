@@ -13,6 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 // TODO move components into component dir. no reason to have sub dirs with one file
 import { SubFormComponent } from './components/sub-form/sub-form.component';
@@ -23,6 +24,7 @@ import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { InputComponent } from './components/input/input.component';
 import { TextComponent } from './components/text/text.component';
 import { NavButtonsComponent } from './components/nav-buttons/nav-buttons.component';
+import { LikertComponent } from './components/likert.component';
 
 import { PlayerComponent } from './player.component';
 
@@ -36,6 +38,7 @@ import { PlayerComponent } from './player.component';
     RepeatComponent,
     SubFormComponent,
     NavButtonsComponent,
+    LikertComponent,
     PlayerComponent
   ],
   imports: [
@@ -51,7 +54,8 @@ import { PlayerComponent } from './player.component';
     MatSelectModule,
     ReactiveFormsModule,
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule
   ],
   entryComponents: [
     PlayerComponent
