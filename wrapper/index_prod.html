@@ -34,7 +34,7 @@
         "de": "Dieser Player interpretiert eine Script-Sprache, die speziell für die effiziente Erstellung umfangreicher Befragungen entwickelt wurde. Über die gängigen Frageformate hinaus werden bedingte Formularblöcke, dynamische Wiederholungen von Blöcken und Likert-skalen unterstützt.",
         "en": "You can use this Verona Player for surveys where you need a large number of questions. By interpreting it's own script language, the player just need one line per control definition. You can setup conditional blocks, repeating blocks or likert scale tables."
       },
-      "version": "3.3.0",
+      "version": "3.3.1",
       "apiVersion": "2.0",
       "repository": {
         "type": "git",
@@ -54,7 +54,7 @@
     let playerStartData = {
       unitDefinition: '',
       unitState: {
-        dataParts: { allResponses: {} }
+        dataParts: { all: {} }
       }
     };
 
@@ -65,7 +65,7 @@
         timeStamp: Date.now(),
         unitState: {
           dataParts: {
-            allResponses: event.detail
+            all: event.detail
           },
           unitStateType: playerMetadata.getNamedItem('data-supported-unit-state-data-types').value,
         }
@@ -76,7 +76,8 @@
       window.parent.postMessage({
         type: 'vopUnitNavigationRequestedNotification',
         sessionId: sessionId,
-        targetRelative: event.detail,
+        targetRelative: '#' + event.detail,
+        target: event.detail,
       }, '*');
     }
 
@@ -85,6 +86,7 @@
       elementValueChanged(event);
     });
     playerComponent.addEventListener('navigationRequested', (event) => {
+      console.log(navigationRequested, event);
       navigationRequested(event);
     });
     document.body.appendChild(playerComponent)

@@ -44,9 +44,9 @@ export class PlayerComponent {
     this.initFields();
     if (startData.unitDefinition) {
       let storedResponses = {};
-      if (startData.unitState?.dataParts?.allResponses &&
-          Object.keys(startData.unitState?.dataParts?.allResponses).length > 0) {
-        storedResponses = JSON.parse(startData.unitState.dataParts.allResponses);
+      if (startData.unitState?.dataParts?.all &&
+          Object.keys(startData.unitState?.dataParts?.all).length > 0) {
+        storedResponses = JSON.parse(startData.unitState.dataParts.all);
       }
       this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split('\n'));
       this.rootBlock.check(storedResponses);

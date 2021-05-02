@@ -31,7 +31,7 @@ export class ParserService {
 
   parseUnitDefinition(scriptLines: string[]): UIBlock {
     this.rootBlock = new UIBlock();
-    const errorMessage = ParserService.checkScriptHeader(scriptLines[0]);
+    const errorMessage = ParserService.checkScriptHeader(scriptLines[0].trim());
     if (errorMessage !== '') {
       this.rootBlock.elements.push(ParserService.createErrorElement(errorMessage));
     } else {
