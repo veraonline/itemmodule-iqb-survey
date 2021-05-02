@@ -292,7 +292,7 @@ Unterstützte Versionen: ${supportedMajorVersions}`;
       );
     }
 
-    return new LikertElement(id, text, false, 'HelptextLIkert');
+    return new LikertElement(id, text, false, this.getHelpText(line));
   }
 
   private static createNavButtonGroupElement(line): UIElement {

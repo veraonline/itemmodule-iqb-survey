@@ -24,7 +24,7 @@ import { LikertBlock } from '../classes/UIBlock';
             {{element.errorText}}
           </div>
           <div *ngIf="element.fieldType !== fieldType.SCRIPT_ERROR" fxLayout="row" fxLayoutAlign="space-between center">
-            <div fxFlex="40">{{element.text}}</div>
+            <div fxFlex="40" [matTooltip]="element.helpText">{{element.text}}</div>
             <mat-radio-group [formControlName]="element.id" fxFlex="60"
                              fxLayout="row" fxLayoutAlign="space-around center">
               <mat-radio-button fxFlex [value]="header"
