@@ -30,6 +30,7 @@ import { InputElement } from '../../classes/UIElement';
         <mat-form-field appearance="fill" *ngIf="elementDataAsUIElement.fieldType === fieldType.DROP_DOWN">
           <mat-select [formControl]="selectInputControl" placeholder="Bitte wählen"
                       matTooltip={{helpText}} [matTooltipPosition]="'above'">
+            <mat-option *ngIf="showEmptyOptionFirst" [value]=""></mat-option>
             <mat-option *ngFor="let option of options; let i = index" [value]="(i + 1).toString()">
               {{option}}
             </mat-option>
@@ -48,6 +49,7 @@ export class SelectComponent extends ElementComponent implements OnInit, OnDestr
   options: string[] = [];
   selectInputControl = new FormControl();
   valueChangeSubscription: Subscription;
+  showEmptyOptionFirst = false;
 
   ngOnInit(): void {
     const elementData = this.elementData as InputElement;
@@ -59,6 +61,8 @@ export class SelectComponent extends ElementComponent implements OnInit, OnDestr
     }
     if (elementData.required) {
       this.selectInputControl.setValidators(Validators.required);
+    } else {
+      this.showEmptyOptionFirst = true;
     }
     if (this.value) {
       this.selectInputControl.setValue(this.value);
