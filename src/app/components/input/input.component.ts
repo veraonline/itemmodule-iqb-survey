@@ -67,7 +67,6 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
           this.linesNumber = linesNumberTry;
         }
       }
-      console.log(this.linesNumber);
       const myValidators = [];
       const maxLengthStr = elementData.properties.get(PropertyKey.MAX_LENGTH);
       if (maxLengthStr) {

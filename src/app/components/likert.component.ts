@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ElementComponent } from './element.component';
 import { LikertBlock } from '../classes/UIBlock';
+import {LikertElement} from "../classes/UIElement";
 
 @Component({
   selector: 'player-likert',
@@ -53,17 +54,19 @@ export class LikertComponent extends ElementComponent implements OnInit, OnDestr
   ngOnInit(): void {
     const elementData = this.elementData as LikertBlock;
     elementData.elements.forEach(likertElement => {
-      const formControl = new FormControl(likertElement.id);
-      this.formControls.push(formControl);
-      this.parentForm.addControl(likertElement.id, formControl);
-      formControl.valueChanges.subscribe(newValue => {
-        formControl.markAsTouched();
-        likertElement.value = String(newValue);
-        // Need to manually emit this, since the LikertBlock has no value prop to set and trigger the parent method
-        this.elementDataChange.emit(likertElement);
-      });
-      if (likertElement.value) {
-        formControl.setValue(likertElement.value);
+      if (likertElement instanceof LikertElement) {
+        const formControl = new FormControl(likertElement.id);
+        this.formControls.push(formControl);
+        this.parentForm.addControl(likertElement.id, formControl);
+        formControl.valueChanges.subscribe(newValue => {
+          formControl.markAsTouched();
+          likertElement.value = String(newValue);
+          // Need to manually emit this, since the LikertBlock has no value prop to set and trigger the parent method
+          this.elementDataChange.emit(likertElement);
+        });
+        if (likertElement.value) {
+          formControl.setValue(likertElement.value);
+        }
       }
     });
   }
