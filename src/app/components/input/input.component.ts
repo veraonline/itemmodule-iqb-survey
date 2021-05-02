@@ -14,8 +14,9 @@ import { InputElement } from '../../classes/UIElement';
       </div>
       <div fxFlex="50" fxLayout="row">
         <mat-form-field *ngIf="linesNumber > 1" appearance="fill" fxFlex="90" fxFlexAlign="start">
-          <textarea matInput mat-autosize [formControl]="textInputControl"
-                    [matAutosizeMaxRows]="linesNumber" autocomplete="off"
+          <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="2" [cdkAutosizeMaxRows]="linesNumber"
+                    [formControl]="textInputControl"
+                    autocomplete="off"
                     matTooltip={{helpText}}
                     [matTooltipPosition]="'above'"></textarea>
           <mat-error *ngIf="textInputControl.errors">
@@ -66,6 +67,7 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
           this.linesNumber = linesNumberTry;
         }
       }
+      console.log(this.linesNumber);
       const myValidators = [];
       const maxLengthStr = elementData.properties.get(PropertyKey.MAX_LENGTH);
       if (maxLengthStr) {
