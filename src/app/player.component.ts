@@ -48,7 +48,7 @@ export class PlayerComponent {
         storedResponses = JSON.parse(startData.unitStateData);
         console.log('player: got unit responses', storedResponses);
       }
-      this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split('\n'));
+      this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split(/\r?\n/g));
       this.rootBlock.check(storedResponses);
     } else {
       console.warn('player: (setStartData) no unitDefinition is given');
@@ -62,7 +62,7 @@ export class PlayerComponent {
   formValueChanged(event: InputElement | RepeatBlock): void {
     this.rootBlock.check({ ...this.allValues, [event.id]: event.value });
     this.allValues = this.rootBlock.getValues();
-    console.log('player: unit responses sent', this.allValues);
+    // console.log('player: unit responses sent', this.allValues);
     this.valueChanged.emit(JSON.stringify(this.allValues));
   }
 }
