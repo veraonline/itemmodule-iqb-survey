@@ -161,12 +161,13 @@ export class IfThenElseBlock extends UIBlock {
   check(values: Record<string, string>): void {
     let goTrue = false;
     if (this.conditionVariableName && values[this.conditionVariableName]) {
+      const condTrue = this.conditionTrueValue;
       let valueToCompare = '';
       valueToCompare += values[this.conditionVariableName];
-      goTrue = (valueToCompare === this.conditionTrueValue);
-      console.log(`valueToCompare: >${valueToCompare}<`);
+      goTrue = (valueToCompare == condTrue);
+      console.log(`valueToyyCompare: >${valueToCompare}<`);
       console.log('typeof valueToCompare: ', typeof valueToCompare);
-      console.log(`this.conditionTrueValue: >${this.conditionTrueValue}<`);
+      console.log(`this.conditionTrueValue: >${condTrue}<`);
       console.log('typeof this.conditionTrueValue: ', typeof this.conditionTrueValue);
       console.log('check: ', goTrue);
     }
