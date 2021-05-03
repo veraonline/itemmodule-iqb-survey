@@ -30,9 +30,7 @@ export interface KeyValuePairString {
 
 export interface StartData {
   unitDefinition: string;
-  unitState: {
-    dataParts: KeyValuePairString
-  };
+  unitStateData: string;
 }
 
 export enum NavButtonOptions {

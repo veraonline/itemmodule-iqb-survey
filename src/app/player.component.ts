@@ -44,25 +44,25 @@ export class PlayerComponent {
     this.initFields();
     if (startData.unitDefinition) {
       let storedResponses = {};
-      if (startData.unitState?.dataParts?.all &&
-          Object.keys(startData.unitState?.dataParts?.all).length > 0) {
-        storedResponses = JSON.parse(startData.unitState.dataParts.all);
+      if (startData.unitStateData) {
+        storedResponses = JSON.parse(startData.unitStateData);
+        console.log('player: got unit responses', storedResponses);
       }
-      this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split('\n'));
+      this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split(/\r?\n/g));
       this.rootBlock.check(storedResponses);
     } else {
       console.warn('player: (setStartData) no unitDefinition is given');
     }
   }
 
-  public tryLeaveNotify(): void { // TODO
+  public tryLeaveNotify(): void {
     this.form.markAllAsTouched();
   }
 
   formValueChanged(event: InputElement | RepeatBlock): void {
     this.rootBlock.check({ ...this.allValues, [event.id]: event.value });
     this.allValues = this.rootBlock.getValues();
-    console.log('allValues: ', this.allValues);
+    // console.log('player: unit responses sent', this.allValues);
     this.valueChanged.emit(JSON.stringify(this.allValues));
   }
 }
