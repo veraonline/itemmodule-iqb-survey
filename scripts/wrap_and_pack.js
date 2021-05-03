@@ -32,7 +32,7 @@ let targetFileName;
 if (args[0] && args[0] === 'dev') {
   targetFileName = `abi_player_${readPackageVersion()}-dev.html`;
 } else {
-  targetFileName = `abi_player_${readPackageVersion()}.html`;
+  targetFileName = `iqb-player-abi@${readPackageVersion()}.html`;
 }
 
 childProcess.fork('node_modules/iqb-dev-components/src/distpacker.js',
