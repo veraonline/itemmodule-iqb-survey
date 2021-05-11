@@ -5,36 +5,39 @@
 Verona interfaces are specifications concerning computer based assessment. You can learn
 more about this German initiative [here](https://github.com/verona-interfaces/introduction).
 
-IQB`s verona-player-abi is a software component which runs unit definitions inside verona
+IQB´s verona-player-abi is a software component which runs unit definitions inside verona
 compliant web applications. The main target for this player are surveys. Unit
-definitions are written as simple text scripts. You can find the specifications of the unit definitions
-for this player [here](https://github.com/iqb-berlin/verona-data-specifications/blob/main/unit-defs/manual_iqb-scripted.md).
-The responses this player emits are specified [here](https://github.com/iqb-berlin/verona-data-specifications/blob/main/responses/manual_iqb-key-value.md).
+definitions are written as simple text scripts.
+
+* [Script syntax](docs/syntax.md) (German only)
+* [Response format](docs/key-value.md) (German only)
+
 
 ## Using the Player
 * You need a Verona host system to run this software, for example the
 [IQB-Testcenter](https://github.com/iqb-berlin/testcenter-setup) or the
 [Verona-Player-Testbed](https://github.com/iqb-berlin/verona-player-testbed).
-* This angular application builds to one single html file, usually called `index_packed.html`.
-You can find a ready-to-use player in [release section](https://github.com/iqb-berlin/verona-player-abi/releases) of
+* This angular application builds to one single html file. You can find a ready-to-use player in [release section](https://github.com/iqb-berlin/verona-player-abi/releases) of
 this repository.
 
 ## Development
 
-To install the necessary packages run:
+This player is an Angular web application. After cloning this repository, you need to download all components this application depends on: 
 
 ```
 npm install
 ```
 
-Building the player:
+### Build Verona Player Html File
+The Verona Interface Specification requires all programming to be built in one single html file. All styles and images need to be packed in one file.
 ```
 npm run build
 ```
+This way, the Angular application is set up as custom element and will be placed inside a Html file. You get the HTML file in the *dist* directory, named `iqb-player-abi@<version>.html`.
 
-This produces an HTML file in the *dist* directory, called `abi_player_<version>.html`.
-
-To create a version which comes with a prepopulated unit script and controls for loading other scripts. Run:
+### Build Html variant with upload buttons for tests 
+There is one distribution variant to load and check unit definitions easily: 
 ```
 npm run build -- dev
 ```
+The wrapper will not support Verona communication spec. You still get one single html file, but with one button to load script files. This way, you can check the player and unit definitions without a server. Just load the html file locally into your browser. 
