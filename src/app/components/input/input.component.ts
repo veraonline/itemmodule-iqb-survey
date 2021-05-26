@@ -15,28 +15,19 @@ import { InputElement } from '../../classes/UIElement';
       <div fxFlex="50" fxLayout="row">
         <mat-form-field *ngIf="linesNumber > 1" appearance="fill" fxFlex="90" fxFlexAlign="start">
           <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="2" [cdkAutosizeMaxRows]="linesNumber"
-                    [formControl]="textInputControl"
+                    [formControl]="inputControl"
                     autocomplete="off"
                     matTooltip={{helpText}}
-                    [matTooltipPosition]="'above'"></textarea>
-          <mat-error *ngIf="textInputControl.errors">
-            {{textInputControl.errors | errorTransform}}
+                    matTooltipPosition="above"></textarea>
+          <mat-error *ngIf="inputControl.errors">
+            {{inputControl.errors | errorTransform}}
           </mat-error>
         </mat-form-field>
-        <mat-form-field *ngIf="linesNumber <= 1 && elementDataAsUIElement.fieldType === fieldType.INPUT_TEXT"
-                        fxFlexAlign="start" appearance="fill" fxFlex="50">
-          <input matInput [formControl]="textInputControl" autocomplete="off"
-                 matTooltip={{helpText}} [matTooltipPosition]="'above'"/>
-          <mat-error *ngIf="textInputControl.errors">
-            {{textInputControl.errors | errorTransform}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field *ngIf="linesNumber <= 1 && elementDataAsUIElement.fieldType === fieldType.INPUT_NUMBER"
-                        appearance="fill" fxFlexAlign="start" fxFlex="50">
-          <input type="number" matInput [formControl]="numberInputControl" autocomplete="off"
-                 matTooltip={{helpText}} [matTooltipPosition]="'above'"/>
-          <mat-error *ngIf="numberInputControl.errors">
-            {{numberInputControl.errors | errorTransform}}
+        <mat-form-field *ngIf="linesNumber <= 1" fxFlexAlign="start" appearance="fill" fxFlex="50">
+          <input matInput [formControl]="inputControl" autocomplete="off"
+                 matTooltip={{helpText}} matTooltipPosition="above"/>
+          <mat-error *ngIf="inputControl.errors">
+            {{inputControl.errors | errorTransform}}
           </mat-error>
         </mat-form-field>
         <p *ngIf="postText">{{postText}}</p>
@@ -50,8 +41,7 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
   postText = '';
   helpText = '';
   linesNumber = 1;
-  numberInputControl = new FormControl();
-  textInputControl = new FormControl();
+  inputControl = new FormControl();
   valueChangeSubscription: Subscription;
 
   ngOnInit(): void {
@@ -79,21 +69,22 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
         myValidators.push(Validators.required);
       }
       if (myValidators.length > 0) {
-        this.textInputControl.setValidators(myValidators);
+        this.inputControl.setValidators(myValidators);
       }
       if (this.value) {
-        this.textInputControl.setValue(this.value);
+        this.inputControl.setValue(this.value);
       }
-      this.parentForm.addControl(elementData.id, this.textInputControl);
-      this.valueChangeSubscription = this.textInputControl.valueChanges.subscribe(() => {
-        if (this.textInputControl.valid) {
-          this.value = this.textInputControl.value;
+      this.parentForm.addControl(elementData.id, this.inputControl);
+      this.valueChangeSubscription = this.inputControl.valueChanges.subscribe(() => {
+        if (this.inputControl.valid) {
+          this.value = this.inputControl.value;
         } else {
           this.value = '';
         }
       });
     } else if (elementData.fieldType === FieldType.INPUT_NUMBER) {
       const myValidators = [];
+      myValidators.push(Validators.pattern(/^-?\d+[.,]?\d*$/));
       const maxValueStr = elementData.properties.get(PropertyKey.MAX_VALUE);
       if (maxValueStr) {
         const maxValueNumberTry = Number(maxValueStr);
@@ -112,13 +103,13 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
         myValidators.push(Validators.required);
       }
       if (this.value) {
-        this.numberInputControl.setValue(this.value);
+        this.inputControl.setValue(this.value);
       }
-      this.numberInputControl.setValidators(myValidators);
-      this.parentForm.addControl(elementData.id, this.numberInputControl);
-      this.valueChangeSubscription = this.numberInputControl.valueChanges.subscribe(() => {
-        if (this.numberInputControl.valid) {
-          this.value = this.numberInputControl.value;
+      this.inputControl.setValidators(myValidators);
+      this.parentForm.addControl(elementData.id, this.inputControl);
+      this.valueChangeSubscription = this.inputControl.valueChanges.subscribe(() => {
+        if (this.inputControl.valid) {
+          this.value = this.inputControl.value;
         } else {
           this.value = '';
         }
