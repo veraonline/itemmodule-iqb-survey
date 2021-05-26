@@ -94,7 +94,6 @@ export class InputComponent extends ElementComponent implements OnInit, OnDestro
       });
     } else if (elementData.fieldType === FieldType.INPUT_NUMBER) {
       const myValidators = [];
-      myValidators.push(Validators.pattern(/^\d+$/));
       const maxValueStr = elementData.properties.get(PropertyKey.MAX_VALUE);
       if (maxValueStr) {
         const maxValueNumberTry = Number(maxValueStr);
