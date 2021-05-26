@@ -27,9 +27,10 @@ import { RepeatBlock } from '../../classes/UIBlock';
       </div>
     </div>
     <mat-accordion fxLayout="column" multi="false" *ngIf="elementDataAsRepeatBlock.elements.length > 0">
-      <mat-expansion-panel *ngFor="let elementList of elementDataAsRepeatBlock.elements; let i = index;">
+      <mat-expansion-panel *ngFor="let elementList of elementDataAsRepeatBlock.elements; let i = index;"
+                           (afterExpand)="scrollRepeatContent('mat-expansion-panel-header-title-' + i)">
         <mat-expansion-panel-header fxLayout="row" fxLayoutAlign="space-between center">
-          <mat-panel-title>
+          <mat-panel-title [id]="'mat-expansion-panel-header-title-' + i">
             {{ subTitle }} {{i + 1}}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -85,6 +86,13 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
     if (!Number.isNaN(valueNumberTry)) {
       this.value = this.newValue;
     }
+  }
+
+  scrollRepeatContent(targetElementId: string): void {
+    console.log(targetElementId);
+    console.log('##');
+    const elementToScroll = document.getElementById(targetElementId);
+    elementToScroll.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   ngOnDestroy(): void {
