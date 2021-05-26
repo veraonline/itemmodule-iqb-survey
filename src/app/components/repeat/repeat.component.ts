@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ElementComponent } from '../element.component';
@@ -28,9 +28,9 @@ import { RepeatBlock } from '../../classes/UIBlock';
     </div>
     <mat-accordion fxLayout="column" multi="false" *ngIf="elementDataAsRepeatBlock.elements.length > 0">
       <mat-expansion-panel *ngFor="let elementList of elementDataAsRepeatBlock.elements; let i = index;"
-                           (afterExpand)="scrollRepeatContent('mat-expansion-panel-header-title-' + i)">
+                           (afterExpand)="scrollRepeatContent(elementId + '_title_' + i)">
         <mat-expansion-panel-header fxLayout="row" fxLayoutAlign="space-between center">
-          <mat-panel-title [id]="'mat-expansion-panel-header-title-' + i">
+          <mat-panel-title [id]="elementId + '_title_' + i">
             {{ subTitle }} {{i + 1}}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -48,6 +48,7 @@ import { RepeatBlock } from '../../classes/UIBlock';
 })
 
 export class RepeatComponent extends ElementComponent implements OnInit, OnDestroy {
+  elementId = '';
   prompt = '';
   subTitle = '';
   helpText = '';
@@ -57,6 +58,7 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
 
   ngOnInit(): void {
     if (this.elementData instanceof RepeatBlock) {
+      this.elementId = this.elementData.id;
       this.prompt = this.elementData.properties.get(PropertyKey.TEXT);
       this.subTitle = this.elementData.properties.get(PropertyKey.TEXT2);
       this.helpText = this.elementData.helpText;

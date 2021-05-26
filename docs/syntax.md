@@ -63,6 +63,8 @@ Mehrzeilige Eingabefelder sind mindestens zwei Zeilen hoch, auch wenn sie leer s
 
 Ungültige Eingaben (z. B. Grenze des numerischen Feldes überschritten) erzeugen einen roten Hinweistext. Der eingegebene Wert wird nicht gespeichert.
 
+Bei numerischen Eingaben ist als Dezimaltrennzeichen sowohl ein Komma als auch ein Punkt erlaubt. Bei der Speicherung wird stets ein Dezimalpunkt verwendet, d. h. beim Zurückkehren zur Eingabe ist der Punkt dargestellt.
+
 Ein Pflichtfeld ist zunächst nicht hervorgehoben. Erst wenn das Eingabefeld besucht und ohne eine Eingabe verlassen wurde, ist ein roter Hinweistext eingeblendet.
 
 ## Ankreuzen/Auswählen
