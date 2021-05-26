@@ -30,7 +30,7 @@ import { InputElement } from '../../classes/UIElement';
             {{inputControl.errors | errorTransform}}
           </mat-error>
         </mat-form-field>
-        <p *ngIf="postText">{{postText}}</p>
+        <p style="margin: 0 0 0 10px" *ngIf="postText">{{postText}}</p>
       </div>
     </div>
   `
