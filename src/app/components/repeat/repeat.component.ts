@@ -9,7 +9,7 @@ import { RepeatBlock } from '../../classes/UIBlock';
   selector: 'player-repeat',
   template: `
     <div fxLayout="row" fxLayoutAlign="space-between center" fxFill>
-      <div fxFlex="50" *ngIf="prompt">
+      <div fxFlex="50" *ngIf="prompt" matTooltip={{helpText}}>
         <p>{{prompt}}</p>
       </div>
       <div fxFlex="50" *ngIf="prompt" fxLayout="row" fxLayoutAlign="start center">
@@ -50,6 +50,7 @@ import { RepeatBlock } from '../../classes/UIBlock';
 export class RepeatComponent extends ElementComponent implements OnInit, OnDestroy {
   prompt = '';
   subTitle = '';
+  helpText = '';
   numberInputControl = new FormControl();
   valueChangeSubscription: Subscription;
   newValue = '';
@@ -58,6 +59,7 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
     if (this.elementData instanceof RepeatBlock) {
       this.prompt = this.elementData.properties.get(PropertyKey.TEXT);
       this.subTitle = this.elementData.properties.get(PropertyKey.TEXT2);
+      this.helpText = this.elementData.helpText;
       const myValidators = [];
       myValidators.push(Validators.min(1));
       const maxValueStr = this.elementData.properties.get(PropertyKey.MAX_VALUE);
