@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ElementComponent } from '../element.component';
@@ -9,7 +9,7 @@ import { RepeatBlock } from '../../classes/UIBlock';
   selector: 'player-repeat',
   template: `
     <div fxLayout="row" fxLayoutAlign="space-between center" fxFill>
-      <div fxFlex="50" *ngIf="prompt">
+      <div fxFlex="50" *ngIf="prompt" matTooltip={{helpText}}>
         <p>{{prompt}}</p>
       </div>
       <div fxFlex="50" *ngIf="prompt" fxLayout="row" fxLayoutAlign="start center">
@@ -27,9 +27,10 @@ import { RepeatBlock } from '../../classes/UIBlock';
       </div>
     </div>
     <mat-accordion fxLayout="column" multi="false" *ngIf="elementDataAsRepeatBlock.elements.length > 0">
-      <mat-expansion-panel *ngFor="let elementList of elementDataAsRepeatBlock.elements; let i = index;">
+      <mat-expansion-panel *ngFor="let elementList of elementDataAsRepeatBlock.elements; let i = index;"
+                           (afterExpand)="scrollRepeatContent(elementId + '_title_' + i)">
         <mat-expansion-panel-header fxLayout="row" fxLayoutAlign="space-between center">
-          <mat-panel-title>
+          <mat-panel-title [id]="elementId + '_title_' + i">
             {{ subTitle }} {{i + 1}}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -47,16 +48,20 @@ import { RepeatBlock } from '../../classes/UIBlock';
 })
 
 export class RepeatComponent extends ElementComponent implements OnInit, OnDestroy {
+  elementId = '';
   prompt = '';
   subTitle = '';
+  helpText = '';
   numberInputControl = new FormControl();
   valueChangeSubscription: Subscription;
   newValue = '';
 
   ngOnInit(): void {
     if (this.elementData instanceof RepeatBlock) {
+      this.elementId = this.elementData.id;
       this.prompt = this.elementData.properties.get(PropertyKey.TEXT);
       this.subTitle = this.elementData.properties.get(PropertyKey.TEXT2);
+      this.helpText = this.elementData.helpText;
       const myValidators = [];
       myValidators.push(Validators.min(1));
       const maxValueStr = this.elementData.properties.get(PropertyKey.MAX_VALUE);
@@ -85,6 +90,11 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
     if (!Number.isNaN(valueNumberTry)) {
       this.value = this.newValue;
     }
+  }
+
+  scrollRepeatContent(targetElementId: string): void {
+    const elementToScroll = document.getElementById(targetElementId);
+    elementToScroll.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   ngOnDestroy(): void {

@@ -16,7 +16,7 @@ import { InputElement } from '../../classes/UIElement';
         <p>{{label}}</p>
       </div>
       <div fxFlex="50" fxLayout="row">
-        <mat-radio-group class="r-group" [formControl]="selectInputControl" fxLayout="column"
+        <mat-radio-group class="r-group" [formControl]="selectInputControl" fxLayout="column" fxLayoutAlign="start start"
                          *ngIf="elementDataAsUIElement.fieldType === fieldType.MULTIPLE_CHOICE"
                          matTooltip={{helpText}} [matTooltipPosition]="'above'">
           <mat-radio-button class="r-option" *ngFor="let option of options; let i = index"
