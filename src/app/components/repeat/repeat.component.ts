@@ -93,8 +93,6 @@ export class RepeatComponent extends ElementComponent implements OnInit, OnDestr
   }
 
   scrollRepeatContent(targetElementId: string): void {
-    console.log(targetElementId);
-    console.log('##');
     const elementToScroll = document.getElementById(targetElementId);
     elementToScroll.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
