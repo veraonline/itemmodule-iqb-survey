@@ -1,11 +1,14 @@
 import {
-  Component, EventEmitter, Input, Output, ViewEncapsulation
+  Component, EventEmitter, Input, OnDestroy, Output, ViewEncapsulation
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { StartData } from './classes/interfaces';
 import { ParserService } from './parser.service';
 import { RepeatBlock, UIBlock } from './classes/UIBlock';
 import { InputElement } from './classes/UIElement';
+import { EventService } from './event.service';
 
 @Component({
   template: `
@@ -20,7 +23,8 @@ import { InputElement } from './classes/UIElement';
   `,
   encapsulation: ViewEncapsulation.None
 })
-export class PlayerComponent {
+
+export class PlayerComponent implements OnDestroy {
   @Output() valueChanged = new EventEmitter<string>();
   @Output() navigationRequested = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
@@ -28,15 +32,25 @@ export class PlayerComponent {
   rootBlock: UIBlock;
   allValues: Record<string, string>;
   form: FormGroup;
+  private ngUnsubscribe = new Subject<void>();
 
-  constructor(public parserService: ParserService) {
+  constructor(public parserService: ParserService,
+              private eventService: EventService) {
     this.initFields();
+    this.subscribeForEvents();
   }
 
-  initFields(): void {
+  private initFields(): void {
     this.rootBlock = new UIBlock();
     this.allValues = {};
     this.form = new FormGroup({});
+  }
+
+  private subscribeForEvents(): void {
+    this.eventService.navigationDenied$
+      .pipe(takeUntil(this.ngUnsubscribe))
+      // to evaluate reason, subscribe with param
+      .subscribe((): void => this.form.markAllAsTouched());
   }
 
   @Input()
@@ -55,14 +69,15 @@ export class PlayerComponent {
     }
   }
 
-  public tryLeaveNotify(): void {
-    this.form.markAllAsTouched();
-  }
-
   formValueChanged(event: InputElement | RepeatBlock): void {
     this.rootBlock.check({ ...this.allValues, [event.id]: event.value });
     this.allValues = this.rootBlock.getValues();
     // console.log('player: unit responses sent', this.allValues);
     this.valueChanged.emit(JSON.stringify(this.allValues));
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

@@ -109,7 +109,7 @@
             break;
           case 'vopNavigationDeniedNotification':
             console.info(['player: got vopNavigationDeniedNotification']);
-            playerComponent.tryLeaveNotify();
+            window.dispatchEvent(new CustomEvent('vopNavigationDeniedNotification', {detail: event.data}));
             break;
           default:
             console.warn(`player: got message of unknown type ${event.data.type}`);
