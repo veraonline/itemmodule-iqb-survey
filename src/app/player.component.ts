@@ -1,5 +1,5 @@
 import {
-  Component, EventEmitter, Input, OnDestroy, Output, ViewEncapsulation
+  Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, ViewEncapsulation
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -12,7 +12,7 @@ import { EventService } from './event.service';
 
 @Component({
   template: `
-    <form [formGroup]="form">
+    <form #playerContent [formGroup]="form">
       <div *ngFor="let element of rootBlock.elements" [style.margin]="'0px 30px'">
         <player-sub-form [elementData]="element" [parentForm]="form"
                          (elementDataChange)="formValueChanged($event)"
@@ -25,8 +25,10 @@ import { EventService } from './event.service';
 })
 
 export class PlayerComponent implements OnDestroy {
+  @ViewChild('playerContent', { static: false }) playerContent: ElementRef;
   @Output() valueChanged = new EventEmitter<string>();
   @Output() navigationRequested = new EventEmitter<string>();
+  @Output() presentationProgress = new EventEmitter<string>();
   // @Output() ready = new EventEmitter(); // TODO bitte prüfen ob nötig, dass der Player ready meldet
 
   rootBlock: UIBlock;
@@ -51,6 +53,17 @@ export class PlayerComponent implements OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       // to evaluate reason, subscribe with param
       .subscribe((): void => this.form.markAllAsTouched());
+    this.eventService.scrollY$
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((y: number): void => this.calculatePresentationComplete(y));
+  }
+
+  private calculatePresentationComplete(y: number): void {
+    const contentPos = window.innerHeight + y;
+    const contentHeight = this.playerContent.nativeElement.offsetHeight + this.playerContent.nativeElement.offsetTop;
+    if (contentHeight - contentPos <= 0) {
+      this.presentationProgress.emit('complete');
+    }
   }
 
   @Input()
@@ -64,6 +77,8 @@ export class PlayerComponent implements OnDestroy {
       }
       this.rootBlock = this.parserService.parseUnitDefinition(startData.unitDefinition.split(/\r?\n/g));
       this.rootBlock.check(storedResponses);
+      // check if presentationProgress could be sent (e.g. small pages which hasn't to be scrolled)
+      setTimeout((): void => this.calculatePresentationComplete(window.scrollY));
     } else {
       console.warn('player: (setStartData) no unitDefinition is given');
     }

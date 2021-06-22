@@ -29,4 +29,19 @@ describe('EventService', () => {
       window.dispatchEvent(new Event('scroll'));
       expect(counter).toBe(2);
     });
+
+  it('should recognize 2 window scroll events Events',
+    () => {
+      let counter = 0;
+      eventService.scrollY$
+        .subscribe((): number => {
+          (counter += 1);
+          return counter;
+        });
+      window.dispatchEvent(new Event('scroll'));
+      window.dispatchEvent(new CustomEvent('scroll'));
+      window.dispatchEvent(new Event('vopNavigationDeniedNotification'));
+      window.dispatchEvent(new Event('scrollY'));
+      expect(counter).toBe(2);
+    });
 });
